@@ -36,3 +36,12 @@ function addJob(personObj, job){
 }
 addJob(person, 'Instructor');
 ```
+using spread operator
+``` javascript
+var person = { id:53, name:"Tim" };
+function addJob(personObj, job){
+  return {...personObj, job};
+}
+addJob(person, 'Instructor');
+```
+Remember both of them only does shallow copy.
