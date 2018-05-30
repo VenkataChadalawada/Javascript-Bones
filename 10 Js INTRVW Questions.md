@@ -1,3 +1,7 @@
+#### few quick notes:
+- In JavaScript all functions are object methods.
+
+
 ### 1) Explain event delegation
 Event delegation allows you to avoid adding event listeners to specific nodes; instead, the event listener is added to one parent.
 say
@@ -116,3 +120,265 @@ timer();
 ##### Why closure ?---
 
 In other words, a closure gives you access to an outer function's scope from an inner function.
+
+### 8)Can you describe the main difference between a forEach loop and a .map() loop and why you would pick one versus the other?
+forEach() — executes a provided function once for each array element.
+map() — creates a new array with the results of calling a provided function on every element in the calling array.
+``` javascript 
+var squared = [1,2,3,4].map(function(num){
+  return Math.pow(num,2);
+});
+
+console.log(squared); // 1,4, 9, 16
+```
+### 9)What's a typical use case for anonymous functions?
+ I would say that the most typical use for anonymous functions in JS is to pass them as arguments to other functions. Take the setTimeout function for example:
+``` javascript 
+//eg1
+setTimeout(function() {
+  alert('hello');
+}, 1000);
+
+//eg2
+var numbers = [2,4,6];
+var numers_half = numbers.map(function(item) {
+ return item / 2;
+});
+```
+### 10)How do you organize your code? (module pattern, classical inheritance?)
+###### Modular
+Modular pattern imitates the classes in conventional software engineering and it mainly focuses on the public and private access to methods & variables. The module pattern goals are to reduce the use of globally scoped variables, so as to decreasing the chances of conflicting with other code throughout an application.
+This is also regarded as the most commonly used design pattern and it is also widely accepted in a number of large projects such as jQuery, Dojo, ExtJS and YUI.
+Advantages
+• Organized and clean approach for developers
+• We can encapsulate data.
+• More clean code in the global namespace(avoiding conflicts).
+Disadvantages
+• We cannot access private methods
+• We can extend Private methods and functions.
+###### The classical inheritance
+ It is in a way is similar to the inheritancein Java or C. Those who have backgrounds in those programming languages must be familiar. So by using classical inheritance, we are recreating the basic programming language’s behavior i.e. using classes and objects, which are instances of those classes.
+
+So a classical pattern is used together with the“prototype”keyword added to the constructor and the newoperator.
+1. Call a constructor function.
+2. Have a child’s prototype point to the parent’s prototype.
+
+### 11) What's the difference between host objects and native objects?
+native object
+
+object in an ECMAScript implementation whose semantics are fully defined by this specification rather than by the host environment.
+
+NOTE Standard native objects are defined in this specification. Some native objects are built-in; others may be constructed during the course of execution of an ECMAScript program.
+host object
+
+object supplied by the host environment to complete the execution environment of ECMAScript.
+
+NOTE Any object that is not native is a host object.
+examples:
+Native objects: Object (constructor), Date, Math, parseInt, eval, string methods like indexOfand replace, array methods, ...
+
+Host objects (assuming browser environment): window, document, location, history, XMLHttpRequest, setTimeout, getElementsByTagName, querySelectorAll, …
+
+### 12) Difference between: function Person(){}, var person = Person(), and var person = new Person()?
+1. function Person() {} 
+Declares a function (but does not execute it).
+It will usually have some code between the curly brackets.
+
+2. var person = Person()
+Declares a variable (person), invokes a function (Person) and sets the value of person to the return of the function.
+
+3. var person = new Person()
+Creates a new instance of an object based on the Person function. So the variable (person) is now an Object, not just a string or a number.
+
+### 13) What's the difference between .call and .apply?
+call - With call(), an object can use a method belonging to another object.
+``` javascript
+var person = {
+    fullName: function() {
+        return this.firstName + " " + this.lastName;
+    }
+}
+var person1 = {
+    firstName:"John",
+    lastName: "Doe",
+}
+var person2 = {
+    firstName:"Mary",
+    lastName: "Doe",
+}
+person.fullName.call(person1);  // Will return "John Doe"
+// call with params
+var person = {
+    fullName: function(city, country) {
+        return this.firstName + " " + this.lastName + "," + city + "," + country;
+    }
+}
+var person1 = {
+    firstName:"John",
+    lastName: "Doe",
+}
+person.fullName.call(person1, "Oslo", "Norway");
+```
+apply is very similar to call(), except for the type of arguments it supports. You use an arguments array instead of a list of arguments (parameters). 
+``` javascript
+var person = {
+    fullName: function(city, country) {
+        return this.firstName + " " + this.lastName + "," + city + "," + country;
+    }
+}
+var person1 = {
+    firstName:"John",
+    lastName: "Doe",
+}
+person.fullName.apply(person1, ["Oslo", "Norway"]);
+```
+
+### 14) Explain Function.prototype.bind ?
+Here is sample code in which one could be forgiven for caching the context to a variable:
+``` javascript
+
+var myObj = {
+
+    specialFunction: function () {
+
+    },
+
+    anotherSpecialFunction: function () {
+
+    },
+
+    getAsyncData: function (cb) {
+        cb();
+    },
+
+    render: function () {
+        var that = this;
+        this.getAsyncData(function () {
+            that.specialFunction();
+            that.anotherSpecialFunction();
+        });
+    }
+};
+
+myObj.render();
+```
+If we had left our function calls as this.specialFunction(), then we would have received the following error:
+
+``` 
+Uncaught TypeError: Object [object global] has no method 'specialFunction'
+```
+We need to keep the context of the myObj object referenced for when the callback function is called. Calling that.specialFunction() enables us to maintain that context and correctly execute our function. However, this could be neatened somewhat by using Function.prototype.bind().
+
+``` javascript
+render: function () {
+    this.getAsyncData(function () {
+        this.specialFunction();
+        this.anotherSpecialFunction();
+    }.bind(this));
+}
+```
+WHAT DID WE JUST DO?
+Well, .bind() simply creates a new function that, when called, has its this keyword set to the provided value. So, we pass our desired context, this (which is myObj), into the .bind() function. Then, when the callback function is executed, this references myObj.
+
+If you’re interested to see what Function.prototype.bind() might look like and what its doing internally, here is a very simple example:
+
+``` javascript
+Function.prototype.bind = function (scope) {
+    var fn = this;
+    return function () {
+        return fn.apply(scope);
+    };
+}
+```
+Another ex to understand bind
+``` javascript
+var foo = {
+    x: 3
+}
+
+var bar = function(){
+    console.log(this.x);
+}
+
+bar(); // undefined
+
+var boundFunc = bar.bind(foo);
+
+boundFunc(); // 3
+```
+
+### 15) What's the difference between feature detection, feature inference, and using the UA (User Agent)string?
+eg
+- Feature detection checks a feature for existence, e.g.:
+```
+if (window.XMLHttpRequest) {
+    new XMLHttpRequest();
+}
+```
+- Feature inference checks for a feature just like feature detection, but uses another function because it assumes it will also exist, e.g.:
+```
+if (document.getElementsByTagName) {
+    element = document.getElementById(id);
+}
+```
+
+Checking the UA string is an old practice and should not be used anymore. You keep changing the UA checks and never benefit from newly implemented features, e.g.:
+```
+if (navigator.userAgent.indexOf("MSIE 7") > -1){
+    //do something
+}
+```
+### 16)Explain Ajax in as much detail as possible.
+ AJAX, as in its acronym states, is Asynchronous in nature. This means, it can receive data through user interaction or automation event without the need to refresh the page, thus, updating and reloading certain portion of the page. There are manyways we can implement AJAX
+ 
+
+The best use of AJAX is where it is used to send small payloads. Here is a simple example.
+
+I load a page that contains information about stock. It has graphs, charts, company information and it also displays the share-price. Every 30 seconds, I make an AJAX request that gets the updated share-price and changes it on the page.
+
+Without AJAX, I might decide to refresh the entire page every 30 seconds, but with AJAX, I can just make a lightweight request to get the tiny bit of information I need.
+Disadvantage-
+When using AJAX, you need to handle the task of telling the user if something has gone wrong. 
+Other issues to watch out for are any JavaScript errors that may prevent your events from firing - or if JavaScript is disabled, in either case ensuring that the form can submit normally before you add the AJAX code is the safest option.
+
+### 17) Explain how JSONP works (and how it's not really Ajax).
+
+JSONP's callback is not an actual callback. Rather, JSONP works by script injection. E.g., if you want to make a JSONP call, you insert this script element into the DOM:
+
+<script src="http://example.com/ajaxendpoint?jsonp=parseResponse"></script>
+The server's response will be something like this:
+
+parseResponse({"json":"value"});
+
+### 18) Have you ever used JavaScript templating?
+you can use templates, which cleans up your code hugely. 
+
+mustache
+underscore
+handlebars
+dust
+jade
+
+### 19) Explain "hoisting"?
+```
+//eg-1
+x = 5; // Assign 5 to x
+
+elem = document.getElementById("demo"); // Find an element 
+elem.innerHTML = x;                     // Display x in the element
+
+var x; // Declare x
+```
+
+```
+//eg-2
+var x; // Declare x
+x = 5; // Assign 5 to x
+
+elem = document.getElementById("demo"); // Find an element 
+elem.innerHTML = x;   
+```
+To understand this, you have to understand the term "hoisting".
+
+Hoisting is JavaScript's default behavior of moving all declarations to the top of the current scope (to the top of the current script or the current function).
+
