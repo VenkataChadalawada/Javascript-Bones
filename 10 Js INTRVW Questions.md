@@ -1,6 +1,6 @@
-#### few quick notes:
+#### Few quick notes:
 - In JavaScript all functions are object methods.
-
+Note - These are taken from multiple internet sources and some medium articles to gather reasonable explanation.
 
 ### 1) Explain event delegation
 Event delegation allows you to avoid adding event listeners to specific nodes; instead, the event listener is added to one parent.
@@ -496,7 +496,7 @@ var promise = new Promise(function(resolve, reject) {
   }
 });
 // usage of promise
-p1(inp)
+promise
 .then((result) => {
     console.log(result);
 })
@@ -516,3 +516,104 @@ What are the pros and cons of using Promises instead of callbacks?
 
 pros - solves the problem of callback hell.
 cons - currently require external library or polyfill to achieve this.
+
+### 34) What are the pros and cons of using Promises instead of callbacks?
+The deep reason why promises are often better is that they’re more composeable, which roughly means that combining multiple promises “just works” and is more readable, while combining multiple callbacks often doesn’t and creates callback hell.
+
+### 35)What are some of the advantages/disadvantages of writing JavaScript code in a language that compiles to JavaScript?
+CoffeeScript. Pros/Cons: Syntactic sugar, readable code, and use of good patterns vs debugging and compilation issues
+
+### 36) What tools and techniques do you use debugging JavaScript code?
+Web/Browser console using console.log. Firebug, Developer Tools, stop points.
+
+### 38) What language constructions do you use for iterating over object properties and array items?
+for loop, for..in, for each..in, map, reduce etc
+
+### 37) Explain the difference between mutable and immutable objects.
+Mutable objects are those whose state is allowed to change over time. An immutable value is the exact opposite — after it has been created, it can never change. Strings and Numbers are inherently immutable in javascript.
+### 38) Explain the difference between synchronous and asynchronous functions 
+— Synchronous: Step wise execution. Next line executed after first. Asynchronous: Execution moves to next step before first is finished. 
+
+### 39) What is event loop?
+The Event Loop is a queue of callback functions. When an async function executes, the callback function is pushed into the queue. The JavaScript engine doesn't start processing the event loop until the code after an async function has executed.
+A job queue (sometimes batch queue), is a data structure maintained by job scheduler software containing jobs to run.
+A call stack is a stack data structure that stores information about the active subroutines of a computer program. This kind of stack is also known as an execution stack, control stack, run-time stack, or machine stack, and is often shortened to just "the stack".
+
+Event Queue : He is the person contains list functions TOBE EXCECUTED By Stack.
+Stack : He is the main person who EXECUTES FUNCTIONS held by Event queue
+
+### 40) Explain the differences on the usage of foo between function foo() {} and var foo = function() {}
+function foo() {} has the name foo directly after the word function and is what is called a function declaration. var foo = function() {}; is called a function expression and doesn't require a name after the word function . Because of this, these functions are considered anonymous
+
+### 41)What are the differences between variables created using let, var or const?
+Var
+The JavaScript variables statement is used to declare a variable and, optionally, we can initialize the value of that variable.
+Example: var a =10;
+Let
+The let statement declares a local variable in a block scope. It is similar to var, in that we can optionally initialize the variable.
+Example: let a =10;
+```
+function nodeSimplified(){
+  let a =10;
+  console.log(a);  // output 10
+  if(true){
+   let a=20;
+   console.log(a); // output 20
+  }
+  console.log(a);  // output 10
+}
+```
+const statement values can be assigned once and they cannot be reassigned. 
+The scope of const statement works similar to let statements.
+```
+function nodeSimplified(){
+  const MY_VARIABLE =10;
+  console.log(MY_VARIABLE);  //output 10
+  MY_VARIABLE =20;           //throws type error
+  console.log(MY_VARIABLE); 
+```
+
+
+Destructuring arrays and objects
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+
+curry function
+``` javascript
+var greetCurried = function(greeting) {
+  return function(name) {
+    console.log(greeting + ", " + name);
+  };
+};
+
+var greetHello = greetCurried("Hello");
+
+greetHello("Heidi");
+greetHello("Eddie");
+greetCurried("Hi there")("Howard"); 
+
+// o/p
+"Hello, Heidi"
+"Hello, Eddie"
+"Hi there, Howard"
+```
+
+### Spread vs Rest Syntax
+When using spread, you are expanding a single variable into more:
+
+```
+var abc = ['a', 'b', 'c'];
+var def = ['d', 'e', 'f'];
+var alpha = [ ...abc, ...def ];
+console.log(alpha)// alpha == ['a', 'b', 'c', 'd', 'e', 'f'];
+```
+The rest parameter syntax allows us to represent an indefinite number of arguments as an array.
+When using rest arguments, you are collapsing all remaining arguments of a function into one array:
+
+```
+function sum( first, ...others ) {
+    for ( var i = 0; i < others.length; i++ )
+        first += others[i];
+    return first;
+}
+console.log(sum(1,2,3,4))// sum(1, 2, 3, 4) == 10;
+```
