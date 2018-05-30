@@ -476,3 +476,43 @@ It’s harder to read the code and reason about it when variables seem to appear
 Anyone can update a global variable from any point in the program at any time (and from any thread if there’s more than one going).
 General code smell - if you're too lazy to put the variable only where it needs to be then what other corners are you cutting?
 It’s probable that you'll encounter global variable name clashes. Since there’s only one namespace you're more likely to double up on a variable name.
+
+### 31)Why would you use something like the load event? Does this event have disadvantages? Do you know any alternatives, and why would you use those?
+The load event fires at the end of the document loading process. At this point, all of the objects in the document are in the DOM, and all the images, scripts, links and sub-frames have finished loading. To execute anything post document load, we fire these events. 
+
+### 32)Explain what a single page app is and how to make one SEO-friendly.
+is a web application or web site that fits on a single web page with the goal of providing a more fluid user experience similar to a desktop application. In a SPA, either all necessary code — HTML, JavaScript, and CSS — is retrieved with a single page load, or the appropriate resources are dynamically loaded and added to the page as necessary, usually in response to user actions.
+phantomjs
+### 33) What is the extent of your experience with Promises and/or their polyfills?
+``` javascript
+var promise = new Promise(function(resolve, reject) {
+  // do a thing, possibly async, then…
+
+  if (/* everything turned out fine*/ ){
+    resolve("Stuff worked!");
+  }
+  else {
+    reject(Error("It broke"));
+  }
+});
+// usage of promise
+p1(inp)
+.then((result) => {
+    console.log(result);
+})
+.then((result) => {
+    console.log(result);
+});
+```
+The biggest advangtage of Promise is that it solves the problem of callback hell.
+
+Polyfills:
+
+jQuery - Deferred
+Bluebird
+Q
+When
+What are the pros and cons of using Promises instead of callbacks?
+
+pros - solves the problem of callback hell.
+cons - currently require external library or polyfill to achieve this.
