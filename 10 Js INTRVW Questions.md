@@ -415,7 +415,7 @@ Stopping event bubbling
 
 What if you don’t want the event to bubble up?
  event.stopPropagation(); // <-- this line here!
-``` jquery
+``` javascript
 $( "button" ).click(function(event) {
   event.stopPropagation(); // <-- this line here!
   console.log( "button was clicked!" );
@@ -425,3 +425,54 @@ $( ".parent, .ancestor" ).click(function(event) {
   console.log( "don't click me!" );
 });
 ```
+### 21) What's the difference between an "attribute" and a "property"?
+In general terms (and in normal English usage) the terms mean the same thing.
+
+In the specific context of HTML / Javascript the terms get confused because the HTML representation of a DOM element has attributes (that being the term used in XML for the key/value pairs contained within a tag) but when represented as a JavaScript object those attributes appear as object properties.
+
+To further confuse things, changes to the properties will typically update the attributes.
+
+For example, changing the element.href property will update the href attribute on the element, and that'll be reflected in a call to element.getAttribute('href').
+
+However if you subsequently read that property, it will have been normalised to an absolute URL, even though the attribute might be a relative URL!
+
+### 22)Why is extending built-in JavaScript objects not a good idea?
+When you extend an object, you change its behaviour.
+
+Changing the behaviour of an object that will only be used by your own code is fine. But when you change the behaviour of something that is also used by other code there is a risk you will break that other code.
+When it comes adding methods to the object and array classes in javascript, the risk of breaking something is very high, due to how javascript works
+f you need custom behaviour, it is far better to define your own class (perhaps a subclass) instead of changing a native one. That way you will not break anything at all.
+
+The ability to change how a class works without subclassing it is an important feature of any good programming language, but it is one that must be used rarely and with caution.
+
+### 23)Difference between document load event and document DOMContentLoaded event?
+The DOMContentLoaded event is fired when the document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading 
+(the load event can be used to detect a fully-loaded page).
+
+### 24)What is the difference between == and ===?
+js has  JavaScript has both strict and type-converting equality 
+=== type check
+
+### 25) Explain the same-origin policy with regards to JavaScript.
+ The same-origin policy helps prevent malicious attacks by stopping code from another site executing on your site. An attacks like this is known as a Cross Site Scripting 
+ 
+### 26) duplicate([1,2,3,4,5]); make this work 
+
+### 27) Why is it called a Ternary operator, what does the word "Ternary" indicate?
+“Ternary” means operands with three(n-ary) param. This is a one-line shorthand for an if-then statement.
+### 28) What is "use strict";? what are the advantages and disadvantages to using it?
+Strict mode helps out in a couple ways:
+
+It catches some common coding bloopers, throwing exceptions.
+It prevents, or throws errors, when relatively "unsafe" actions are taken (such as gaining access to the global object).
+It disables features that are confusing or poorly thought out.
+- disadv
+ but some developers don’t like the constraint and want to use all the features of the language.
+ 
+### 29)Create a for loop that iterates up to 100 while outputting "fizz" at multiples of 3, "buzz" at multiples of 5 and "fizzbuzz" at multiples of 3 and 5
+
+### 30)Why is it, in general, a good idea to leave the global scope of a website as-is and never touch it?
+It’s harder to read the code and reason about it when variables seem to appear out of thin air (but really from the global scope).
+Anyone can update a global variable from any point in the program at any time (and from any thread if there’s more than one going).
+General code smell - if you're too lazy to put the variable only where it needs to be then what other corners are you cutting?
+It’s probable that you'll encounter global variable name clashes. Since there’s only one namespace you're more likely to double up on a variable name.
