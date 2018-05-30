@@ -360,6 +360,11 @@ dust
 jade
 
 ### 19) Explain "hoisting"?
+In JavaScript, a variable can be declared after it has been used.
+
+In other words; a variable can be used before it has been declared.
+
+Example 1 gives the same result as Example 2:
 ```
 //eg-1
 x = 5; // Assign 5 to x
@@ -382,3 +387,41 @@ To understand this, you have to understand the term "hoisting".
 
 Hoisting is JavaScript's default behavior of moving all declarations to the top of the current scope (to the top of the current script or the current function).
 
+- JavaScript only hoists declarations, not initializations.
+### 20) Describe event bubbling.
+Event bubbling occurs when a user interacts with a nested element and the event propagates up (“bubbles”) through all of the ancestor elements.
+``` html
+<div class="ancestor">
+  <div class="parent">
+    <button> Click me! </button>
+  </div>
+</div>
+```
+``` javascript
+$( "button" ).click(function(event) {
+  console.log( "button was clicked!" );
+});
+
+$( ".parent" ).click(function(event) {
+  console.log( "child element was clicked!" );
+});
+
+$( ".ancestor" ).click(function(event) {
+  console.log( "descendant element was clicked!" );
+});
+```
+When the user clicks the button the events starts at the button element, so button was clicked! is logged to the console. Then child element was clicked! and finally descendant element was clicked! are logged as well.
+Stopping event bubbling
+
+What if you don’t want the event to bubble up?
+ event.stopPropagation(); // <-- this line here!
+``` jquery
+$( "button" ).click(function(event) {
+  event.stopPropagation(); // <-- this line here!
+  console.log( "button was clicked!" );
+});
+
+$( ".parent, .ancestor" ).click(function(event) {
+  console.log( "don't click me!" );
+});
+```
