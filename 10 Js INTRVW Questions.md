@@ -79,3 +79,40 @@ as a function expression.
 Below is the one:
 ``` (function() {}()); ```
 
+### 6) What's the difference between a variable that is: null, undefined or undeclared
+
+- undefined is a variable that has been declared but no value exists and is a type of itself 'undefined’
+- null is a value of a variable and is a type of object. … 
+- undeclared variables is a variable that has been declared without 'var' keyword.
+###### 6a how do we handle?
+ if(typeof someUndefVar == whatever) — works 
+but
+  if(someUndefVar) -- error 
+common practice is below
+value = obj.prop || defaultValue
+
+### 7) closure
+A JavaScript closure is a function that has a pointer reference to a free variable. A free variable is one that has fallen out of scope after its parent function has returned. However, if that outer function still has some reference to the free var (normally through a function that gets returned, or through a method property), the variable will not get garbage collected because it will have a non-zero reference count. Thus, from outside the function, we can still access the inner variable by means of the closure.
+``` closure = function + outer context ```
+Timer example to understand closure:------
+
+``` javascript
+function StopWatch(){
+    var startTime =  Date.now();
+    function getDelay(){
+        var elapsedTime = Date.now()-startTime;
+        alert(elapsedTime);
+    }
+    return getDelay;
+}
+
+//execution
+var timer = StopWatch();
+for(var i=0;i<10000;i++){
+    var foo = Math.random()*10000;
+}
+timer();
+```
+##### Why closure ?---
+
+In other words, a closure gives you access to an outer function's scope from an inner function.
