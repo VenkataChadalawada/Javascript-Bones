@@ -2,6 +2,7 @@ Note - Taken from several internet resources
 few among them - https://quizlet.com/28293152/front-end-interview-questions-css-flash-cards/
 https://neal.codes/blog/front-end-interview-css-questions
 https://css-tricks.com/how-to-create-an-ie-only-stylesheet/
+https://github.com/yangshun/front-end-interview-handbook/blob/master/questions/css-questions.md
 currying in js -https://css-tricks.com/how-to-create-an-ie-only-stylesheet/
 
 ### 1 What is CSS selector specificity and how does it work?
@@ -40,3 +41,40 @@ clear: both;
 ### 6 How would you approach fixing browser-specific styling issues?
 
 Use a separate stylesheet that only loads when that specific browser is being used. Thankfully, the days of IE specific stylesheets are almost gone.
+
+### 7 Can you give an example of an @media property other than screen?
+
+@media queries support 4 different types; all, screen, print, and speech. It is quite common for a site to provide different styles for pages that would be printed; different color schemes (B&W) maybe required, hiding background images, as well as addressing hidden information that could be relevant when printed.
+
+### 8 What are some of the "gotchas" for writing efficient CSS?
+There are some other types but they will be removed in the css level 4 spec.
+
+Primarily about efficient css selectors
+
+- Avoid key selectors that match large numbers of elements (tag and universal selectors)
+
+- Prefer class and ID selectors over tag selectors
+
+- Avoid redundant selectors
+
+- Preferably don't use * (universal selector)
+
+
+*And like any other code, try group and reuse common properties.
+Ref: https://www.w3schools.com/cssref/css3_pr_mediaquery.asp
+
+### 9 svg exmpl
+<rect x="10" y="10" width="100" height="100" stroke="blue" 
+  fill="purple" fill-opacity="0.5" stroke-opacity="0.8"/>
+  
+### 10 preprocessors like less saas
+Describe what you like and dislike about the CSS preprocessors you have used.
+Likes:
+
+Mostly the advantages mentioned above.
+Less is written in JavaScript, which plays well with Node.
+Dislikes:
+
+I use Sass via node-sass, which is a binding for LibSass written in C++. I have to frequently recompile it when switching between node versions.
+In Less, variable names are prefixed with @, which can be confused with native CSS keywords like @media, @import and @font-face rule.
+
