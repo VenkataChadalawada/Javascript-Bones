@@ -40,8 +40,9 @@ hence
 Note : few people try not to use onSubmit instead they write a button and do onClick in the form .
 Please remember a button's click is not same as onSubmit. Problem is there are lot of behaviours in browser that won't get covered by this click event.
 
+## simple todo form
 ``` javascript
-// simple todo form
+
 import React, { Component } from 'react';
 import './App.css';
 
