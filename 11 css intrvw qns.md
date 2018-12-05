@@ -77,4 +77,30 @@ Dislikes:
 
 I use Sass via node-sass, which is a binding for LibSass written in C++. I have to frequently recompile it when switching between node versions.
 In Less, variable names are prefixed with @, which can be confused with native CSS keywords like @media, @import and @font-face rule.
+### 11. Can default property value be restored through CSS? If yes, how?
 
+In CSS, you cannot revert back to old values due to lack of default values. The property can be re- declared to get the default property.
+
+### 12. Enlist the various Media types used?
+
+Different media has different properties as they are case insensitive.
+
+They are:
+
+Aural – for sound synthesizers and speech
+Print – gives a preview of the content when printed
+Projection- projects the CSS on projectors.
+Handheld- uses handheld devices.
+Screen- computers and laptop screens.
+29. What is CSS Box Model and what are its elements?
+
+This box defines design and layout of elements of CSS. The elements are:
+
+Margin: the top most layer, the overall structure is shown
+Border: the padding and content option with a border around it is shown.  Background color affects the border.
+Padding: Space is shown. Background colour affects the border.
+Content: Actual content is shown.
+
+### 13. What is contextual selector?
+
+Selector used to select special occurrences of an element is called contextual selector. A space separates the individual selectors. Only the last element of the pattern is addressed in this kind of selector. For e.g.: TD P TEXT {color: blue}
