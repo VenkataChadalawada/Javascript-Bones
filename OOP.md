@@ -16,6 +16,10 @@ flatHouse // undefined
 - Problem is our constructor function isn't returning anything. so we need new Keyword
 
 ### New Keyword
+- 1 creates an object
+- 2 It sets the values to this
+- 3 It adds return this to the constructor function
+- 4 It sets the property on the object which is __proto__
 ```javascript
 function Dog(name, age){
   this.name = name;
