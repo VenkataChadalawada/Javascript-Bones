@@ -93,7 +93,7 @@ console.log(m);
 
 ### Prototypes
 
-```javascipt
+```javascript
 function Car(make, model, year){
   this.make = make;
   this.model = model;
