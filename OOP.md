@@ -259,3 +259,49 @@ String.prototype.reverse = function(){
   }
 }
 ```
+### Inheritance
+#### Problem - if we use direct assignment
+``` javascript
+//Problem in inhertiance with directly assign objects
+//Person Parent class
+function Person1(fname, lname){
+   this.fname = fname;
+   this.lname = lname;
+}
+
+Person1.prototype.sayHi = function() {
+  return "I am currently a student!";
+}
+
+//Student - Child class
+function Student1(fname, lname){
+  return Person1.apply(this, arguments);
+}
+// Inheritance - can we assign ?
+Student1.prototype = Person1.prototype;
+//what happens??
+var ram = new Person1('Venkat', 'Chadalawada');
+
+console.log(ram);
+console.log(ram.sayHi()); // you get undefined and thats what you should get
+```
+#### we cant assign one object to another - It will just create a reference
+``` javascript
+function Person(fname, lname){
+   this.fname = fname;
+   this.lname = lname;
+}
+
+function Student(fname, lname){
+  return Person.apply(this,arguments);
+}
+
+Student.prototype.status = function() {
+  return "I am currently a student!";
+}
+
+var ram = new Person('Venkat', 'Chadalawada');
+
+console.log(ram);
+console.log(ram.status); // you get undefined and thats what you should get
+```
