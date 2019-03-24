@@ -287,21 +287,33 @@ console.log(ram.sayHi()); // you get undefined and thats what you should get
 ```
 #### we cant assign one object to another - It will just create a reference
 ``` javascript
+
 function Person(fname, lname){
    this.fname = fname;
    this.lname = lname;
 }
-
+Person.prototype.sayHi = function() {
+  return "I am currently a Person!";
+}
 function Student(fname, lname){
   return Person.apply(this,arguments);
 }
 
+// Inheriting from Person
+//Step 1 - use Object.create
+Student.prototype = Object.create(Person.prototype);
+//Step 2 - reassign constructor to Student
+Student.prototype.constructor = Student;
+
 Student.prototype.status = function() {
   return "I am currently a student!";
 }
-
-var ram = new Person('Venkat', 'Chadalawada');
-
 console.log(ram);
 console.log(ram.status); // you get undefined and thats what you should get
+console.log(sam.status()); 
+console.log(sam.sayHi()); 
 ```
+
+#### why Object.create not new while inherting
+Because new creates lot of additional properties which we dont need
+
