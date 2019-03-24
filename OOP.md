@@ -155,4 +155,35 @@ var venkicar = new Car("Ford");
 console.log(venkicar);
 console.log(venkicar.sayHi());
 ```
+### A broader example
 
+
+``` javascript
+function Car(make, model, year){
+  this.make = make;
+  this.model = model;
+  this.year = year;
+  this.isRunning = false;
+}
+
+Car.prototype.turnOn = function(){
+    this.isRunning = true;
+}
+
+Car.prototype.turnOff = function(){
+    this.isRunning = false;
+}
+
+Car.prototype.honk = function(){
+    if(this.isRunning){
+      return "Beep!";
+    }
+}
+
+var venkicar = new Car("Ford", "Mustang", "2015");
+console.log(venkicar);
+console.log(venkicar.turnOn());
+console.log(venkicar.honk());
+console.log(venkicar.turnOff());
+console.log(venkicar.honk());
+```
