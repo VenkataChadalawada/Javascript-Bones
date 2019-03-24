@@ -112,5 +112,47 @@ console.log(Car.prototype);
 console.log(venkicar.__proto__);
 //They tie each other
 console.log(venkicar.__proto__ === Car.prototype);
+// and it should be equal to its own constructor
+console.log(Car.prototype.constructor === Car);
+```
+
+### Prototype Chaining
+Say we add a property to Car function Prototype We can see them tied to all objects we created out of Car
+``` javascript
+
+Car.prototype.isMine = true;
+Car.prototype.teddy = 20;
+
+console.log(venkicar.isMine);
+console.log(venkicar.teddy);
+
+```
+### Restructuring inner methods to be on prototype
+
+``` javascript
+function Car(make){
+  this.make = make;
+  this.sayHi = function(){
+    return "Hi " + this.make;
+  }
+}
+
+var venkicar = new Car("Ford");
+console.log(venkicar.sayHi());
+
+
+// more efficient way to define in prototype and it will be there
+
+
+function Car(make){
+  this.make = make;
+}
+
+Car.prototype.sayHi = function(){
+    return "Hi " + this.make;
+}
+var venkicar = new Car("Ford");
+console.log(venkicar);
+console.log(venkicar.sayHi());
 ```
 
