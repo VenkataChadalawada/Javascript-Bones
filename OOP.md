@@ -90,3 +90,27 @@ console.log(c);
 console.log(m);
 
 ```
+
+### Prototypes
+
+```javascipt
+function Car(make, model, year){
+  this.make = make;
+  this.model = model;
+  this.year = year;
+  this.numWheels = 4;
+}
+
+
+//execution
+var venkicar = new Car('Ford', 'Mustang', '2015');
+console.log(venkicar);
+
+//every class has a prototype
+console.log(Car.prototype);
+// every object gets dunder proto after assigned with new key word
+console.log(venkicar.__proto__);
+//They tie each other
+console.log(venkicar.__proto__ === Car.prototype);
+```
+
