@@ -110,9 +110,91 @@ var b = setTimeout(function(){
   clearTimeout(timerId);
 }, 2000);
 */
-output
 ```
+output
 ```
 --- Timeout 41
 cancelling first timer as we decided not needed
+```
+### 4. setInterval
+A function that continuously invokes a callback function after every X milliseconds where X is provided to setInterval
+
+```javascript
+function callback(){
+  console.log('-----hi im venky---');
+}
+
+var repeat = 1000;
+
+setInterval(callback, repeat);
+// also doesnt matter whether we assign it or not it executes. below gives same result too.
+// var someid = setInterval(callback, repeat);
+```
+output
+```
+// It never stops and keep printing output
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+....
+....
+....
+```
+### 4.1 clearInterval with a counter
+
+```javascript
+var c = 0;
+function callback(){
+  c+=1;
+  console.log('-----hi im venky---');
+  if(c===10){
+    clearInterval(id);
+  }
+}
+
+var repeat = 2000;
+
+var id = setInterval(callback, repeat);
+console.log(id);
+```
+output
+```
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+```
+### 4.2 clearInterval with a time tracker
+
+```javascript
+var time = 0;
+var repeat = 2000;
+function callback(){
+  time = time+repeat
+  console.log('-----hi im venky---');
+  if(time===10000){
+    clearInterval(id);
+  }
+}
+
+var id = setInterval(callback, repeat);
+console.log(id);
+```
+output
+```
+// It stoper after 10 seconds - which automatically leads to printing 5 times as it executes every two seconds
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
+-----hi im venky---
 ```
