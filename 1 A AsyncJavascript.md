@@ -65,3 +65,5 @@ function upperCaseName(name){
 
 console.log(greet("Venky", upperCaseName));
 ```
+
+## 2. Stacks & heaps
