@@ -66,4 +66,53 @@ function upperCaseName(name){
 console.log(greet("Venky", upperCaseName));
 ```
 
-## 2. Stacks & heaps
+## 2. callStacks & heaps
+A stack is ordered set of stack frames. most recently invoked function is on top of the stack. Bottom of the stack is the first function that initiated. Stack will be processed from top to bottom
+
+Heap is the area in memory where your data is stored
+
+## 3. setTimeout
+A function that asynchronously invokes a callback after a delay in milliseconds
+` setTimeout(callback, millisecs); `
+
+```javascript
+function callback(){
+  console.log('hi--im callback--');
+}
+console.log('--it started running--');
+setTimeout(callback, 2000);
+console.log('--it runs this irrespective of that completes--');
+```
+output
+``` 
+--it started running--
+--it runs this irrespective of that completes--
+// after 2 secs
+hi--im callback--
+```
+we have also clearTimeout when we needed it in some cases
+
+```javascript
+var timerId = setTimeout(function(){
+  console.log('----i will print after 5 seconds');
+}, 5000);
+console.log('---',timerId);
+
+setTimeout(function(){
+  console.log('cancelling first timer as we decided not needed');
+  clearTimeout(timerId);
+}, 2000);
+
+// Doesn't matter even if you declare it or just runs it. It gives you same output
+/*
+var b = setTimeout(function(){
+  console.log('cancelling first timer as we decided not needed');
+  clearTimeout(timerId);
+}, 2000);
+*/
+output
+```
+```
+--- Timeout 41
+cancelling first timer as we decided not needed
+```
