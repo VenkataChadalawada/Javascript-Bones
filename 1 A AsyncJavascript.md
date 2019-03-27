@@ -330,7 +330,6 @@ setTimeout(function(){
 },1000);
 ```
 output:-
--------
 prints counter: 1 after a sec, then counter:2 after 2 secs and then counter:3 after 3 secs
 ```
 Counter: 1
@@ -359,8 +358,7 @@ p1.then(function(res){
   console.log('second anonymous promise resolved--', res2);
 });
 ```
-output:--
--------
+output:
 // It first prints first promise result after a second then after 2 seconds it prints second promise result
 
 ```
@@ -368,3 +366,55 @@ first promise p1 resolved-- 6
 second anonymous promise resolved-- 9
 ```
 
+##### conerting callback hell into promise
+
+```javascript
+/*var counter = 0;
+setTimeout(function(){
+  counter++;
+  console.log("Counter:", counter);
+  setTimeout(function(){
+    counter++;
+    console.log("Counter:", counter);
+    setTimeout(function(){
+      counter++;
+      console.log("Counter:", counter);
+    }, 3000);
+  }, 2000);
+},1000);
+*/
+//converting this into a promise
+var counter = 0;
+function increment(){
+    counter++;
+    console.log("Counter:", counter);
+}
+
+
+function runLater(callback, timeInMs){
+  var p = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      var res = callback();
+      resolve(res);
+    }, timeInMs);
+  });
+  return p;
+}
+
+runLater(increment, 1000).then(function(){
+  return runLater(increment, 2000);
+}).then(function(){
+  return runLater(increment, 3000);
+}).then(function(){
+  //final .then not necessary
+  //but if you want you can do any post executions if you want
+});
+  
+
+```
+output:
+```
+Counter: 1
+Counter: 2
+Counter: 3
+```
