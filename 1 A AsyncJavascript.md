@@ -198,3 +198,21 @@ output
 -----hi im venky---
 -----hi im venky---
 ```
+##### example
+Implement a function called countDown that accepts a time in seconds. The function will print the time remain to the console every second. Instead of printing 0, the function should print "Ring Ring Ring!!!".
+```javascript
+
+function countDown(time){
+  var curTime = 0;
+  var id = setInterval(function(){
+    curTime=curTime+1000;
+    if(curTime === time){
+      console.log('---Ring Ring Ring---');
+      clearInterval(id);
+    } else{
+    console.log('--time remaining---', time-curTime);
+    }
+  }, 1000);
+}
+countDown(10000);
+```
