@@ -307,3 +307,64 @@ output
 ```
 promise p1 resolved-- 8
 ```
+
+### 6.2 Promise chaining
+
+##### Disadvantages of callbacks - nested callbacks / callback chain hell
+```javascript
+// nested call backs
+// code is hard to read - hard to reason the logic - code is not modular - code duplication
+
+var counter = 0;
+setTimeout(function(){
+  counter++;
+  console.log("Counter:", counter);
+  setTimeout(function(){
+    counter++;
+    console.log("Counter:", counter);
+    setTimeout(function(){
+      counter++;
+      console.log("Counter:", counter);
+    }, 3000);
+  }, 2000);
+},1000);
+```
+output:-
+-------
+prints counter: 1 after a sec, then counter:2 after 2 secs and then counter:3 after 3 secs
+```
+Counter: 1
+Counter: 2
+Counter: 3
+```
+##### chaining with an anonymous promise
+
+```javascript
+var p1 = new Promise(function(resolve, reject){
+  setTimeout(function(){
+    var randInt = Math.floor(Math.random() * 10);
+    resolve(randInt);
+  }, 1000);
+});
+
+p1.then(function(res){
+  console.log('first promise p1 resolved--', res);
+  return new Promise(function(resolve, reject){
+    setTimeout(function(){
+      var randInt = Math.floor(Math.random() * 10);
+      resolve(randInt);
+    }, 2000);
+  });
+}).then(function(res2){
+  console.log('second anonymous promise resolved--', res2);
+});
+```
+output:--
+-------
+// It first prints first promise result after a second then after 2 seconds it prints second promise result
+
+```
+first promise p1 resolved-- 6
+second anonymous promise resolved-- 9
+```
+
