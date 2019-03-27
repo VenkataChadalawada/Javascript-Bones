@@ -244,3 +244,66 @@ It prints after executing all the callbacks , the reason is first setTimeout com
 3628800
 ---only appears after stack is empty & event loops gets this out of queue onto the stack---
 ```
+##### Javascript single threaded
+code execution in javascript is linear, code that is running cannot be interrupted by something else going on in the program
+`if you wanted to loop - use setTimeout as setInterval is already a loop by itself`
+
+### 6 Promises
+
+```javascript
+var p1 = new Promise(function(resolve, reject){
+  resolve([1,2,3,4]);
+});
+
+p1.then(function(arr){
+  console.log('promise p1 resolved--', arr);
+});
+```
+Output
+
+```
+promise p1 resolved-- [ 1, 2, 3, 4 ]
+```
+
+Also we can handle rejects too
+
+```javascript
+var p1 = new Promise(function(resolve, reject){
+  var a = Math.random();
+  if(a<0.5){
+    resolve(a);
+  } else {
+    reject(a)
+  }
+  
+});
+
+p1.then(function(res){
+  console.log('promise p1 resolved--', res);
+}).catch(function(err){
+  console.log('error is ----', err);
+});
+```
+
+### 6.1 Handling Async code with Promises
+With promises we can control and execute things asynchronously
+
+```javascript
+var p1 = new Promise(function(resolve, reject){
+  setTimeout(function(){
+    var randInt = Math.floor(Math.random() * 10);
+    resolve(randInt);
+  }, 4000);
+});
+
+p1.then(function(res){
+  console.log('promise p1 resolved--', res);
+}).catch(function(err){
+  console.log('error is ----', err);
+});
+```
+output
+// after 4 seconds promise's setTimeout finshes and gets into call stack when stack is empty , it executes resolve that actually resolves the "then" function and  brings out the output
+```
+promise p1 resolved-- 8
+```
