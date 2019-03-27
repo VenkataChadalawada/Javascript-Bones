@@ -198,7 +198,7 @@ output
 -----hi im venky---
 -----hi im venky---
 ```
-##### example
+##### Example
 Implement a function called countDown that accepts a time in seconds. The function will print the time remain to the console every second. Instead of printing 0, the function should print "Ring Ring Ring!!!".
 ```javascript
 
@@ -215,4 +215,32 @@ function countDown(time){
   }, 1000);
 }
 countDown(10000);
+```
+### 5 Event Loop & Queue
+Queue - An ordered list of functions waiting to be placed into the stack in FIFO basis
+Event loop - a piece of functionality in the javascript run time checks the Queue when the stack is empty, if the stack is empty the front of the queue is placed in the stack.
+
+Best way to understand is with an example
+
+```javascript
+function factorial(n){
+  if(n===0 || n===1){
+    return 1;
+  }
+  return n*factorial(n-1);
+}
+
+setTimeout(function(){
+  console.log('---only appears after stack is empty & event loops gets this out of queue onto the stack---');
+}, 0);
+
+
+console.log(factorial(10));
+```
+output:-
+It prints after executing all the callbacks , the reason is first setTimeout comes to stack and places its function in Queue event loop only will bring the function from Queue only after stack is empty. 
+
+```
+3628800
+---only appears after stack is empty & event loops gets this out of queue onto the stack---
 ```
