@@ -1,4 +1,4 @@
-# Arrays & Objects
+# Objects
 ### simple class creation with method in pure javascript
 ``` javascript
 function counter(){
