@@ -270,7 +270,7 @@ Examples:
 function vowelCount(str){
   const vowels = 'aeiou';
   return str.toLowerCase().split('').reduce(function(acc, next){
-    if(vowels.indexOf(next)>0){
+    if(vowels.indexOf(next)!=-1){
       if(!acc[next]){
         acc[next]=1;
       } else{
