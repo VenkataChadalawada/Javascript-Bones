@@ -47,7 +47,7 @@ you can observe `data` is not there, `fact` is there - because fact is being use
 
 In other languages like Java, there is this concept of private variables, But in javascript we have closures.
 
-### Additional privacy with closures
+### Additional privacy with closures (modular approach)
 ```javascript
 function classRoom(){
   var instructors = ['Elie','Colt'];
@@ -182,4 +182,343 @@ function guessingGame(amount){
       
     }
 }
+```
+
+## What is 'this' ?
+- reserved keyword
+- usually determined by how a function is called - what we call 'execution context'
+- can be determined using four rules `(global, object/implicit, explicit, new)`
+
+#### 1 Global Context
+if its outside, not inside a declared object - no call, apply, bind, new then its window
+console.log(this); //window
+
+var data = {};
+data.instructor = 'Ellie';
+data // {instructor: 'Ellie'}
+
+###### some dangers
+``` javascript
+function whatisThis(){
+return this;
+}
+whatisThis(); //window
+
+function variablesInThis(){
+this.person = "Elie";
+}
+variablesInThis()
+
+console.log(person); //Elie
+```
+// Even though there is no person declared as a global variable on window. This happend the same because 'this' inside variablesInThis function is window
+
+``` javascript
+var dog = "Rusty";
+function makePerson(){
+var person = "Colt";
+}
+console.log(dog) //Rusty
+console.log(person) // undefined error 
+```
+// to avoid undefined error define `var person` on top - then you dont get error but "colt"
+
+If we use Strict Mode - It protects this too!
+```javascript
+"use strict"
+console.log(this) //window
+function whatIsThis(){
+  return this;
+}
+whatIsThis(); //undefined
+```
+
+```javascript
+"use strict"
+function variablesInThis() {
+   this.person = "Elie";
+}
+variablesInThis(); //TypeError cant set person on undefined!
+```
+  
+#### 2 Implicit/Object
+when the keyword 'this' is inside of a declared object
+```javascript
+var person = {
+  firstName: "Elie",
+  sayHi: function(){
+    return "Hi "+this.firstName; // closes Parent object = Person
+  },
+  determineContext: function(){
+    return this === person; // this will evaluate to true
+  }
+}
+/*
+>  person.sayHi();
+'Hi Elie'
+>  person.determineContext();
+true
+>  
+*/
+```
+##### How about this example?
+```javascript
+var person = {
+  firstName: 'Elie',
+  determineContext: this;
+}
+person.determineContext; //window
+```
+
+Why??
+
+###### A keyword 'this' is defined when a function is run! There is not a function being run here to create a new value of the keyword 'this' so the value of 'this' is still the window
+
+##### what happens if we have a nested object?
+``` javascript
+var person = {
+  firstName: "Elie",
+  sayHi: function(){
+    return "Hi "+this.firstName; // closes Parent object = Person
+  },
+  determineContext: function(){
+    return this === person; // this will evaluate to true
+  },
+  dog: {
+    sayHello: function(){
+      return "Hello "+ this.firstName;
+    },
+    determineContext: function(){
+      return this===person;
+    }
+  }
+}
+
+console.log(person.sayHi(), // Hi Colt
+person.determineContext(), //true
+
+person.dog.sayHello(), // Hello undefined
+person.dog.determineContext()); //false
+```
+As we observed `person.dog.sayHello(), // Hello undefined`
+how to rectify this ? 
+Using call , apply & bind
+
+#### 3 Explicit Binding
+Call Apply Bind = choose what we want the context of this to be using call apply bind
+
+- Call(thisArg, a,b,c,....)
+- It is immediately invoked
+
+- Apply
+- It is immediately invoked
+
+- bind
+- Not immediately invoked => it returns the function with this applied. it is powerful you can use it for later especially in async functions
+
+
+##### Call
+1) You can change above function call as below:
+``` javascript
+person.dog.sayHello(), // Hello undefined
+person.dog.sayHello.call(person), // Hello Elie
+```
+
+2) Another usecase
+``` javascript
+var elie = {
+  firstName: "Elie",
+  sayHi: function(){
+    return "Hi "+this.firstName; // closest Parent object = elie
+  }
+}
+var colt = {
+  firstName: "Colt",
+  sayHi: function(){
+    return "Hi "+this.firstName; // closest Parent object = colt
+  }
+}
+  
+
+console.log(elie.sayHi()) // Hi Elie
+console.log(colt.sayHi()) // Hi Colt
+
+
+// Can we use "call" here to avoid duplicate code - like sayHi() function
+var elie = {
+  firstName: "Elie",
+  sayHi: function(){
+    return "Hi "+this.firstName; // closes Parent object = elie
+  }
+}
+var colt = {
+  firstName: "Colt",
+}
+
+console.log(elie.sayHi()) // Hi Elie
+console.log(elie.sayHi.call(colt)) // Hi Colt
+```
+###### One step further - lets make sayHi function for anyone!
+function sayHi(){
+  return "Hi "+this.firstName;
+}
+var colt = {
+   firstName: "Colt"
+}
+var elie = {
+   firstName: "elie"
+}
+sayHi.call(colt); // Hi Colt
+sayHi.call(elie); // Hi Elie
+
+###### Another Use Case For Call
+Lets imagine we want to select all the 'divs' on a page
+`var divs = document.getElementByTagName('div');`
+How can we find all the divs that have the text "Hello". Using filter would be nice!
+`div.filter //undefined`
+unfortunately, divs is not an array, it's an array like object so filter wont work.
+so how can we convert an array-like-object into an array?
+very similar to the way we make copies of arrays - Using slice!
+
+How can we do this?
+
+"call" to the rescue!
+
+Let's use SLICE method on arrays, but instead of the target of slice (the keyword this) being that array, lets set the target of the keyword 'this' to be our divs array-like-object
+``` javascript
+var divsArray = [].slice.call(divs);
+divsArray.filter(function(val){
+  return val.innerText === "Hello";
+}
+```
+what we are doing is trying to clice something that is not actually an array! In Javascript , SLICE will not work on all data types, but it works very well on arry-like-objects
+
+##### Apply
+``` javascript
+function sayHi(){
+  return "Hi "+this.firstName;
+}
+var colt = {
+   firstName: "Colt"
+}
+var elie = {
+   firstName: "elie"
+}
+console.log(
+sayHi.call(colt),
+sayHi.apply(elie));
+
+// Hi Colt 
+// Hi elie
+```
+It seems like there is no diff between call and apply. But things get complicated if there are mor enumber of arguments
+```javascript
+
+
+function addNumbers(a,b,c,d){
+  return this.firstName+" just calculated "+ (a+b+c+d);
+}
+var colt = {
+   firstName: "Colt"
+}
+var elie = {
+   firstName: "elie"
+}
+console.log(
+addNumbers.apply(elie,[1,2,3,4]),
+addNumbers.call(colt,1,2,3,4));
+
+//elie just calculated 10 
+//Colt just calculated 10
+
+```
+##### Another use case of apply
+When a function does not accept an array, apply will spread out values in an array for us!
+
+```javascript
+var nums = [5,7,1,4,2];
+Math.max(nums) // NaN
+//to solve this in ES5
+Math.max.apply(this,nums) // 7
+```
+similar example
+``` javascript
+function sumValues(a,b,c){
+  return a+b+c;
+}
+var values = [4,1,2];
+sumValues(values); // "4,1,2undefinedundefined"
+
+sumValues.apply(this, [4,1,2]); //7
+```
+
+#### Bind
+``` javascript
+function addNumbers(a,b,c,d){
+  return this.firstName+" just calculated "+ (a+b+c+d);
+}
+var colt = {
+   firstName: "Colt"
+}
+var elie = {
+   firstName: "elie"
+}
+
+var elieCalc = addNumbers.bind(elie,1,2,3,4); 
+console.log(elieCalc);
+//returns a new applied function with elie as object binded
+
+console.log(elieCalc());
+//elie just calculated 10 
+
+```
+*** with bind - we do not need to know all the arguments upfront!
+```
+var elieCalc = addNumbers.bind(elie,1,2);
+elieCalc(3,4); //elie just calculated 10 
+```
+
+###### Set the context of keyword this for a function that happens in later point of time.
+setTimeout is a method on window object that is used to execute after a specified amount of time
+```javascript
+//recap on setTimeOut
+//setTimeout(Fn, timeinMillisecs)
+
+setTimeout(function(){
+  console.log('Hello World!')
+}, 20000)
+
+we can do other things while we wait
+```
+problem example: -
+in this case, the keyword this is inside the declared object - since setTimeout will be called in later point of time the object it is attached to is actually WINDOW
+
+```javascript
+var colt = {
+  firstName: "Colt",
+  sayHi: function(){
+    setTimeout(function(){
+      console.log('Hi '+this.firstName);
+    }, 1000);
+  }
+}
+
+// in this case, the keyword this is inside the declared object - since setTimeout will be called in later point of time the object it is attached to is actually WINDOW
+
+colt.sayHi(); //Hi undefined (1000 millisecs later)
+```
+Use bind to set the correct context of 'this'
+
+```javascript
+
+var colt = {
+  firstName: "Colt",
+  sayHi: function(){
+    setTimeout(function(){
+      console.log('Hi '+this.firstName);
+    }.bind(this), 1000);
+  }
+}
+
+colt.sayHi(); //Hi Colt (1000 millisecs later)
 ```
