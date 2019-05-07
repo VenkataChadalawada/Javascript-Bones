@@ -1,8 +1,16 @@
 # Object Oriented Programming in javascript
+- a programming model based around the idea of objects
+- these objects are constructed from what we called "classes", which we can think of like a blueprint. we call these objects created from classes "instances"
+- we use `functions` and `objects` to design the same pattern.
+
+##### what is the necessity?
+Imagine we want to make a few house objects, they will all have bedrooms, bathrooms and numSqft
+
 
 ### Defining a constructor
+- usually we set first letter a cap in Constructor function
 ```javascript
-constructor function(bedrooms, bathrooms, numsqft){
+function House(bedrooms, bathrooms, numsqft){
  this.bedrooms = bedrooms;
 this.bathrooms = bathrooms;
 this.numSqft = numSqft;
@@ -16,7 +24,7 @@ flatHouse // undefined
 - Problem is our constructor function isn't returning anything. so we need new Keyword
 
 ### New Keyword
-- 1 creates an object
+- 1 creates an empty object
 - 2 It sets the values to this
 - 3 It adds return this to the constructor function
 - 4 It sets the property on the object which is __proto__
@@ -30,11 +38,27 @@ function Dog(name, age){
 }
 
 var d = new Dog('stumpy', 10);
+// 1. creates an empty object d => Dog{}
+// 2. It then sets the keyword 'this' to be that empty object
+// 3. It adds an implicit return to the end of the function , which follows it
+// 4. It adds a property onto the empty object called "__proto__", which links the "prototype" property on the constructor function to the empty object
+
+/* It looks like below:-
+Dog {name: "Rusty", age: 3, bark: ƒ}
+age: 3
+bark: ƒ ()
+name: "Rusty"
+__proto__: Object
+
+*/
+
 console.log(d.name);
 console.log(d.age);
 console.log(d.bark());
 
 ```
+
+
 ### Multiple constructors
 
 ```javascript
@@ -55,7 +79,7 @@ function Motorcycle(make, model, year){
 
 // lot of duplication
 // It would be neat if we can borrow some from car for motocycle
-// using call or apply
+// using "call" or "apply"
 
 function Car(make, model, year){
   this.make = make;
@@ -90,8 +114,88 @@ console.log(c);
 console.log(m);
 
 ```
+### EXERCISE on above
+``` javascript
+// PART 1
 
+// Create a constructor function for a Person, each person should have a firstName, lastName, favoriteColor and favoriteNumber. Your function MUST be named Person. 
+function Person(firstName, lastName, favoriteColor, favoriteNumber){
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.favoriteColor = favoriteColor;
+    this.favoriteNumber = favoriteNumber;
+    
+
+// Write a method called multiplyFavoriteNumber that takes in a number and returns the product of the number and the object created from the Person functions' favorite number.
+    this.multiplyFavoriteNumber = function(number){
+       return number*this.favoriteNumber;
+    }
+    
+    
+}
+// PART 2
+
+// Given the following code - refactor the Child function to remove all the duplication from the Parent function. You should be able to remove 4 lines of code in the Child function and replace it with 1 single line.
+
+function Parent(firstName, lastName, favoriteColor, favoriteFood){
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.favoriteColor = favoriteColor;
+    this.favoriteFood = favoriteFood;
+}
+
+function Child(firstName, lastName, favoriteColor, favoriteFood){
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.favoriteColor = favoriteColor;
+    this.favoriteFood = favoriteFood;
+}
+
+function Child(){
+    Parent.apply(this, arguments);
+}
+```
 ### Prototypes
+- Every constructor function has a property on it called "prototype" which is an object.
+- The prototype object has a property on it called  "constructor", which points back to the constructor function.
+- __proto__ is the actual object that is used in the lookup chain to resolve methods, etc.
+- prototype is the object that is used to build __proto__ when you create an object with "new"
+
+```
+( new Foo ).__proto__ === Foo.prototype;
+( new Foo ).prototype === undefined;
+```
+lets see with an example
+```javascript
+
+function Person(name){
+  this.name = name;
+}
+Person.prototype // we get an object that has a constructor method
+
+// Lets create two objects using Person Constructor function
+ var colt = new Person('Colt');
+ var elie = new Person("Elie");
+ 
+ elie.__proto__ === Person.prototype
+ // true
+ colt.__proto__ === Person.prototype
+//true
+
+Person.prototype.constructor === Person
+//true
+```
+### So what is this prototype
+- when new key word is used a property __proto__ will be added to Prototype of constructor function.
+- it is an object we can place methods and properties on it. they can be accessed by the objects that are created by this constructor function.
+eg:
+``` javascript
+Person.prototype.isInstructor = true;
+elie.isInstructor; //true
+colt.isInstructor; //true
+```
+since these objects elie and colt has link to Person prototype via __proto__ , they can both access anything inside of it.
+
 
 ```javascript
 function Car(make, model, year){
@@ -117,6 +221,20 @@ console.log(Car.prototype.constructor === Car);
 ```
 
 ### Prototype Chaining
+How does Javascript find methods and properties
+say,
+```
+var arr = []
+arr.push
+arr.__proto__ === Array.prototype
+```
+In javascript , first it checks if that object has that particular method or property if not found then it checks if that object's __proto__ has it or not
+This keeps happening until the property or method is found, if not javascript returns undefined.
+More deeper example:
+```
+arr.hasOwnProperty('length');
+actual Array __proto__ doesn't have it. so it checks the next __proto__ (array is derived from Object)
+
 Say we add a property to Car function Prototype We can see them tied to all objects we created out of Car
 ``` javascript
 
