@@ -463,32 +463,33 @@ function Motorcycle(make, model, year){
 Motorcycle.prototype = Object.create(Vehicle.prototype);
 Motorcycle.prototype.constructor = Motorcycle;
 ```
-// Base Function
-function Person(fname, lname){
-   this.fname = fname;
-   this.lname = lname;
-}
-// Deried Function
-function Student(fname, lname){
-  return Peron.apply(this, arguments);
-}
-Student.prototype.sayHi = function(){
-  return "hello "+this.fname+" "+this.lname;
-}
+
+## CLARITY of JS Inheritance with a good example
+``` javascript
+// define the Person Class  
+function Person(name) {
+    this.name = name;
+}  
+
+Person.prototype.copy = function() {  
+    // return new Person(this.name); // just as bad
+    return new this.constructor(this.name);
+};  
+
+// define the Student class  
+function Student(name) {  
+    Person.call(this, name);
+}  
+
+// inherit Person  
 Student.prototype = Object.create(Person.prototype);
-Student.prototype.constructor; // Person 
+// TEST---
+var student1 = new Student("trinth");  
+console.log(student1.copy() instanceof Student); // => false    //<<<<<<YOU SEE<<<<<
+
+// correct the constructor pointer because it points to Person  
 Student.prototype.constructor = Student;
 
-// if you observe,
-Person.prototype  - has these below
-{constructor: ƒ}
-```
-constructor: ƒ Person(fname, lname)
-__proto__: Object
-```
-Student.prototype
-{constructor: ƒ}
-```
-constructor: ƒ Student(fname, lname)
-__proto__: Object
+var student1 = new Student("trinth");  
+console.log(student1.copy() instanceof Student); // => true
 ```
