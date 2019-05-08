@@ -1,3 +1,27 @@
+# Recap on OOJS
+(** If you are in hurry**)
+- 1)Everytime the "new" keyword is used , a link between OBJECT created and the PROTOTYPE property of the constructor is established, this link can be accessed using __proto__
+``` c.__proto__ == Vehicle.prototype ```
+- 2)The PROTOTYPE object conatins a property called constructor, which points back to the "constructor" function
+``` c.__proto__.constructor === Vehicle ```
+- 3)To share properties and methods for objects created by a constructor function, place them in the prototype as it is the most efficient
+```
+//Adding Property
+Person.prototype.isInstructor = true;
+
+// Adding method
+Person.prototype.sayHi = function(){
+  return "Hi "+this.name;
+}
+```
+- 4)To pass methods and properties from one prototype object to another we can use inheritance which involves setting the prototype property to be a newly created object using Object.create and resetting the constructor property
+```
+Car.prototype = Object.create(Vehicle.prototype)
+
+Car.prototype.constructor = Car
+
+```
+
 # Object Oriented Programming in javascript
 - a programming model based around the idea of objects
 - these objects are constructed from what we called "classes", which we can think of like a blueprint. we call these objects created from classes "instances"
