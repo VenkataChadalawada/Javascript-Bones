@@ -488,8 +488,7 @@ __proto__: Object
 ```
 Student.prototype
 {constructor: ƒ}
-```constructor: ƒ Student(fname, lname)
-__proto__: Object``````
-
-`
-``````
+```
+constructor: ƒ Student(fname, lname)
+__proto__: Object
+```
