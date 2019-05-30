@@ -82,7 +82,7 @@ But any handler may decide that the event has been fully processed and stop the 
 The method for it is event.stopPropagation().
 
 ## 3) setTimeout weird parts
-#### type 1
+#### type 1 - scoping on loop of setTimeout events with "Var" vs "let"
 ```
 for(let i=0; i<5; i++){
   setTimeout(function(){
@@ -98,6 +98,41 @@ o/p - after 2 seconds it prints
 "hi" 3
 "hi" 4
 ```
+where as if you use `var`
+```
+for(var i=0; i<5; i++){
+      setTimeout(function(){
+          console.log('hi', i);
+      }, 1000);
+}
+```
+o/p
+```
+5
+5
+5
+5
+5
+```
+before "let" keyword, using Var itself - they use to solve this way
+```
+for(var i=0; i<5; i++){
+    (function(j){
+      setTimeout(function(){
+          console.log('hi', j);
+      }, 1000);
+    })(i);
+}
+```
+o/p
+```
+1
+2
+3
+4
+5
+```
+
 #### type 2
 ```
  setTimeout(function(){
