@@ -80,3 +80,51 @@ A bubbling event goes from the target element straight up. Normally it goes upwa
 But any handler may decide that the event has been fully processed and stop the bubbling.
 
 The method for it is event.stopPropagation().
+
+## 3) setTimeout weird parts
+#### type 1
+```
+for(let i=0; i<5; i++){
+  setTimeout(function(){
+  }, 2000);
+  console.log('hi', i);
+}
+```
+o/p - after 2 seconds it prints
+```
+"hi" 0
+"hi" 1
+"hi" 2
+"hi" 3
+"hi" 4
+```
+#### type 2
+```
+ setTimeout(function(){
+    for(let i=0; i<5; i++){
+      console.log('hi', i);
+    }
+  }, 2000);
+
+```
+o/p after 2 secs
+``` 
+"hi" 0
+"hi" 1
+"hi" 2
+"hi" 3
+"hi" 4
+```
+
+#### type3 - let scope
+```
+ setTimeout(function(){
+    for(let i=0; i<5; i++){
+      console.log('hi', i);
+    }
+  }, i);
+  ```
+  o/p
+  ```
+  i is not defined
+  ```
