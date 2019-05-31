@@ -163,3 +163,37 @@ o/p after 2 secs
   ```
   i is not defined
   ```
+
+## 4) different ways of function declarations in javascript
+``` javascript
+// 1 simple function in oldstyle
+function hello(){
+  console.log('hello venkata');
+}
+hello() //hello venkata
+
+// 1 simple function in es2015
+var hello = () => {
+  console.log('hello venkata');
+}
+hello() //hello venkata
+
+// 2 functions inside objects - old style
+var venky = {
+firstname: 'Venkata',
+sayHi: function(){
+         console.log('hi venky', this.firstname);
+       }
+}
+venky.sayHi() // hi venky Venkata
+
+// 2 functions inside objects - new style es2015
+const venky = {
+firstname: 'Venkata',
+sayHi(){
+  console.log('hi venky', this.firstname);
+}
+}
+venky.sayHi() // hi venky Venkata
+
+```
