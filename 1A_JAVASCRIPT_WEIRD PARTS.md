@@ -127,5 +127,99 @@ called b!
 firsttime  undefined
 secondtime  Hello World!
 ```
+## Conceptual Aside #4 - SINGLE THREADED & SYNCHRONOUS EXECUTION
+
+- Single Threaded
+One command executed at a time
+(Under the hood of the browser it may not be)
+
+- Synchromous: one at a time in order
+
+### Function Invocation & Execution Stack
+Invocation - Calling a function - by using paranthesis ()
+
+``` javascript
+function b(){
+}
+function a(){
+  b();
+}
+a();
+```
+So what happens if we execute this script?
+
+1) Global execution context 
+- in creation phase b and a will be in the memory
+2) in execution phase when it sees a() a new execution context will be created and placed in the execution stack and run line by line the moment it sees another function b() it creates another execution context for b and executes that, only after it executed it pops off the stack and goes back to next element in stack
+
+Order lexically doesnt matter eg:
+say the order is changes
+``` javascript
+function a(){
+  b();
+  var c;
+}
+
+function b(){
+}
+a();
+```
+
+### Variable Environment
+```javascript
+function b(){
+    var myVar;
+    console.log(myVar); 
+ }
+function a(){
+    var myVar = 2;
+    console.log(myVar);
+    b();
+}
+
+var myVar = 1;
+console.log(myVar);
+
+a();
+```
+
+```
+O/P:
+
+1
+2
+undefined
+```
+
+### Scope Chain
+``` javascript
+function b(){
+    console.log('what am i ', myVar); 
+}
+function a(){
+    var myVar = 2;
+    console.log(myVar);
+    b();
+}
+
+var myVar = 1;
+console.log(myVar);
+
+a();
+```
+
+every execution environment has connection to outer environment, it turns out if JS couldnt find variable in that execution context it checks in its outer execution context (depends on where the function sits lexically)
+So, in our case at function b JS didnt find it and went to its outer execution context to check
+
+```
+O/P
+
+1
+app.js:6 2
+app.js:2 what am i  1
+```
+
+This whole thing is called Scope Chain
 
 
+  
