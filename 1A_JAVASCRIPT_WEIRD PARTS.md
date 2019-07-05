@@ -221,5 +221,293 @@ app.js:2 what am i  1
 
 This whole thing is called Scope Chain
 
+## HOW JAVASCRIPT handles Asynchronous calls?
+```javascript
+// long running function
+function waitThreeSeconds(){
+    var ms = 3000 + new Date().getTime();
+    while(new Date() < ms){}
+    console.log('finished function');
+}
 
-  
+function clickHandler(){
+    console.log('click event!');
+}
+
+// listen for the click event
+document.addEventListener('click', clickHandler);
+
+waitThreeSeconds();
+
+console.log('finished execution');
+
+/* O/P
+finished function
+finished execution
+click event!
+*/
+```
+JS fires these events and they will be placed in the event queue once the stack is empty these in event queue will be put up onto stack. so even if you click immediately they will be in queue
+
+### Conceptual aside#4 - Types & Javascript
+###### Dynamic Typing 
+You dont tell the Engine what type of data a variable holds, it figures it out while your code is running
+
+###### Primitive Types
+there are 6 primitive types in JS
+- 1 undefined = represents lack of existence (you shouldn't set a variable to this)
+- 2 null = represents lack of existence (you can set a variable to this)
+- 3 boolean = true or false
+- 4 number = floating point number (there's always some decimals unlike other prog languages)
+- 5 string = a sequence of charecters
+- 6 symbol = used in ES6 (created in next version of JS)
+
+### Conceptual Aside #5 - Operators
+A special function that is syntactically writtern differently
+``` 
+var a = 3+4; 
+console.log(a);
+```
+operators are functions in Js in infix notation
+### operator precedence & their associativity
+##### operator precedence -
+which operator function gets called first functions called in order with its priority higher
+##### associativity
+
+```javascript
+var a = 3+4*5;
+console.log(a);
+```
+every operator has an order of associativity
+eg, = operator has right-left
+```javascript
+var a=2,b=3,c=4;
+a=b=c; // first b=c happens so b becomes 4, then it assigns to a as 4
+console.log(a); //4
+console.log(b); //4
+console.log(c); //4
+```
+### Conceptual Aside #6 - coercion
+converting a value from one type to another
+```
+var a = 1+2
+console.log(a)
+var a = 'hello'+'world';
+console.log(a)
+var a = 1+'2'; // 
+console.log(a); // '12'
+
+```
+### existence & boolean
+Boolean(undefined)
+Boolean("")
+Boolean(false)
+Boolean(0) // false you might need that extra logic check if u consider 0
+
+### Default Values
+```
+function greet(name){
+   name = name || '<your name>';
+   console.log('hello '+name);
+}
+   greet();
+```
+
+## Objects & Functions
+### Objects & Dot
+Object can have 0x001
+- primitive property 0x002
+- Object property 0x003
+- Function method 0x004
+```
+var person = new Object();
+person['firstname'] = 'Tony';
+person.firstname
+```
+### Objects & dot
+```
+var person = {};
+var p2 = {fname: 'Tony', lname:'Alice'};
+
+console.log(p2.lname);
+```
+### Object Literal
+``` javascript
+var Tony = {
+   fname: 'Tony',
+   lname: 'Alice',
+   address: {
+      street: '111 Main St',
+      city: 'New York',
+      state: 'NY',
+   }
+};
+
+function greet(person){
+  console.log('hi '+person.fname);
+}
+greet(Tony);
+greet({
+  fname: 'Mary',
+  lname: 'Doe'
+});
+
+```
+
+### Framework Aside: #1 - Or || operator as backup to reduce rewrites
+naming in frameworks use 'or' operator to avoid reqrites
+var a = a || 'hi';
+
+### Framework Aside: #2
+var greet = 'hello';
+var greet = 'hola';
+
+console.log(greet);
+// spanish overrides english here
+
+so solution is use objects
+
+var english = {};
+var spanish = {};
+english.greet = 'hello';
+
+### JSON Object Literal
+JSON.stringify
+JSON.parse
+
+### Functions are objects
+In Javascript Functions are objects 
+- a special type of object
+- primitive, Object, Function
+- name or anonymous
+- code - will be asproperty (invocable - () )
+``` javascript
+
+function greet(){
+    console.log('hi');
+}
+
+greet.language = 'english'; // as functions are objects we added 
+
+console.log(greet); // you will see code in chrome console
+console.log(greet.language); // you will get 'english' came from inmemory 
+
+greet(); //  with () the code will be invoked
+
+```
+###### First class functions (only in JS)
+Everything you can do with other types you can do with functions
+Assign them to variables, pass them arround, create them on the fly
+
+spanish.greet = 'hola';
+
+### Function statements and function expressions
+###### Expression 
+unit of code that results in a value - it doesnt have to save to a variable
+```
+a = 3; // it returns 3
+1 + 2; // it returns 3
+a = { greeting: 'hi' }; // returns object
+```
+###### statement
+```
+if(a===3){
+}
+```
+lets see now function statements & function expression
+```javascript
+
+greet();
+
+function greet(){
+    console.log('hi');
+} // this is function statement => this doesnt return a value its a statement
+// but it does some special things - it will be placed in execution context
+// so it can be hoisted
+
+// Now lets do function expression
+var anonymousGreet = function() {
+    console.log('hi');
+}
+
+```
+As we discussed earlier
+greet is a function object in memory, it has name property and code property by calling with () - code will be invocked
+anonymousGreet that points to a function object in memory, it has no name property and code property.
+since it has no name how do we invoke it since this is a function expression  it can be invocked with the variable it points to as
+```   anonymousGreet(); ```
+
+But can it be hoisted?
+
+```javascript
+
+greet(); // you get 'hi'
+
+function greet(){
+    console.log('hi');
+} // this is function statement => this doesnt return a value its a statement
+// but it does some special things - it will be placed in execution context
+// so it can be hoisted
+anonymousGreet(); // you get undefined here similar to any variable
+// Now lets do function expression
+var anonymousGreet = function() {
+    console.log('hi');
+}
+// anonymousGreet(); // so it should be afterwards
+```
+Variables will be first assigned as undefined in creation phase and throws error because you are trying to invoke undefined
+
+#### passing functions to functions - also called a functional programing style because functions in JS are objects
+```javascript
+function log(a){
+  a();
+}
+log(function(){
+  console.log('hi');
+}); // hi
+```
+
+### Conceptual Aside #7 - ByValue vs ByReference
+In both cases we are talking about variables
+var a = 6
+a now knows address say 0x001 in which 6 sits
+
+lets say now
+b=a;
+this time b copies the primitive value into another memory location say 0x002 and it points to it
+This is called ByValue (works only for primitive types)
+
+say
+var a = {name: 'sai'};
+a now knows address say 0x001 in which  {name: 'sai'} sits.
+now say b=a
+this time b simply points to 0x001 same location where the object sits while 'a' created it
+This is called "By reference"
+
+```javascript
+// By Value
+var a = 3;
+var b;
+
+b = a;
+a = 2;
+
+console.log(a); // 2
+console.log(b); // 3 no impact even if a changes as b has its own copy
+
+//By Reference - all objects including functions
+var c = { greeting: 'hi' };
+var d;
+
+d=c;
+c.greeting = 'hello'; // Mutate - To change something
+console.log(c); // { greeting: 'hello' }
+console.log(d) // now it has also { greeting: 'hello' }
+ ```
+ 
+ 
+
+
+
+
+
