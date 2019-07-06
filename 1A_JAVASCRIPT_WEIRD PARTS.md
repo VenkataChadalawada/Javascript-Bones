@@ -750,3 +750,80 @@ var person = {
 console.log(person);
 ```
 this is perfectly valid - dont get stuck because of this
+
+### Immediately Invoked Function Expression
+
+```javascript
+//function statement
+function greet(name){
+    console.log('hello '+name);
+}
+greet('sai');
+
+//using a function expression
+var greetFunc = function(name){
+    console.log('hello '+name);
+}
+greetFunc('sai');
+
+// using an Immediately Invoked Function Expression
+var greeting = function(name){
+    console.log('hello '+name);
+}('sai');
+console.log(greeting);
+
+3; //valid JS expression
+
+"im a string"; //valid JS expression
+
+{ name: 'sai' }; //valid JS expression
+
+function(name){
+    console.log('hello '+name);
+}; // Error - this is a function statement not an expression , so syntax parser throws error
+
+(function(name){
+    console.log('hello '+name);
+}); // No error - valid function expression syntax using parenthisis
+
+
+(function(name){
+    var greeting = 'hello'
+    console.log(greeting+' '+name);
+}('sai')); // Immediately Invoked Function Expression - valid syntax using parenthisis
+
+// we can also provide parenthesis outside
+(function(name){
+    var greeting = 'hello'
+    console.log(greeting+' '+name);
+})('sai'); // Immediately Invoked Function Expression - valid syntax using parenthisis
+```
+
+### Framework aside #4 -
+```javascript
+(function(name){
+    var greeting = 'hello'
+    console.log(greeting+' '+name);
+}('sai')); // Immediately Invoked Function Expression - valid syntax using parenthisis
+```
+Global execution context 
+It created function in memory anonymous 
+new execution context will be created
+in execution phase 'sai' goes into the 
+```javascript
+var greeting = 'Hola';
+(function(name){
+    var greeting = 'hello'
+    console.log(greeting+' '+name);
+}('sai')); 
+```
+Most of libraries do this way to reduce collisons
+say if we want global obj
+```javascript
+(function(global, name){
+    var greeting = 'hello';
+    global.greeting = 'Hello';
+    console.log(greeting+' '+name);
+}(window, 'sai')); 
+console.log(greeting);
+```
