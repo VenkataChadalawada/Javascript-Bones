@@ -505,9 +505,248 @@ console.log(c); // { greeting: 'hello' }
 console.log(d) // now it has also { greeting: 'hello' }
  ```
  
+ Also when we reassign c, d would still point to old location
+ ```javascript
+ // By Value
+var a = 3;
+var b;
+
+b = a;
+a = 2;
+
+console.log(a); // 2
+console.log(b); // 3 no impact even if a changes as b has its own copy
+
+//By Reference - all objects including functions
+var c = { greeting: 'hi' };
+var d;
+
+d=c;
+c.greeting = 'hello'; // Mutate - To change something
+console.log(c); // { greeting: 'hello' }
+console.log(d) // now it has also { greeting: 'hello' }
  
+//By reference (even as parameters)
+function changeGreeting(obj){
+    obj.greeting = 'Hola';
+}
+changeGreeting(d);
+console.log(c); //{greeting: "Hola"}
+console.log(d); //{greeting: "Hola"}
 
+// Note - the equals operator sets up new memory space (new address)
+c = { greeting: 'howdy' };
+console.log(c); //{greeting: "howdy"} now c poi ts to new location
+console.log(d); //{greeting: "Hola"} d still points to old one still
 
+```
+### Objects, Functions, this
+Remember when Execution context is created (Creation Phase)
+Each "execution context" will get:
+- variable environment 
+- Outer Environment
+- 'this' variable
 
+```javascript
+console.log(this); // window - in global execution context of browser
 
+function a() {
+    console.log(this); // it will also point to global
+    this.newvariable = 'hello'; // you are actually assigng this in global this
+}
+a();
 
+var b = function() {
+    console.log(this);
+}
+
+a(); //window
+console.log(newvariable);
+b(); //window
+// They all pointing at the same window at same address
+console.log('-------');
+
+// What about methods inside an object?
+// property - in  object if its primitve its called property
+// method - in object if its a function its called method
+
+var c  = {
+    name: 'The c object',
+    log: function(){
+        this.name = 'updated c object';
+        console.log(this);
+        var setname = function(newName){
+            this.name = newName; // here this points to global object - how to solve it - check below
+        }
+        setname('Update again! the c object');
+        console.log(this);
+    }
+}
+c.log(); // inside an object this points to the object it is inside , it can be useful to acces other propertie and methods of the object
+console.log('--------');
+/*
+
+{name: "updated c object", log: ƒ}
+{name: "updated c object", log: ƒ}
+
+*/
+
+var c  = {
+    name: 'The c object',
+    log: function(){
+        var self = this;
+        self.name = 'updated c object';
+        console.log(self);
+        var setname = function(newName){
+            self.name = newName; // here this points to global object - how to solve it - check below
+        }
+        setname('Update again! the c object');
+        console.log(self);
+    }
+}
+c.log();
+/*
+{name: "updated c object", log: ƒ}
+{name: "Update again! the c object", log: ƒ}
+*/
+
+// Nolanguage is perfect it has its own quirks
+// Using 'let' instead of 'var' could solve someof these problems
+```
+### Conceptual Aside #8 - Arrays - collections of anything
+
+```javascript
+var arr = [1,2,3];
+
+var arr2 = [1, 
+    false, 
+    {
+        name: 'sai',
+        address: '5400 W Parmer',
+    },
+    function(name){
+        var greeting = 'Hello';
+        console.log(greeting + name);
+    },
+    'howdy'
+];
+
+console.log(arr2);
+// how do we invoke this function? eg:
+arr[3](arr[2].name); 
+```
+
+### "arguments" and spread
+Remember in execution context ( creation phase) for a function
+- variable environment
+- this
+- outer environment
+- arguments - list of all values / parameters you pass to the function
+
+```javascript
+
+function greet(fname, lname, language='en', ...other){
+    language = language || 'en'; // defaulting old style
+    console.log(fname);
+    console.log(lname);
+    console.log(language);
+    console.log(arguments);
+    console.log('arg[0] ', arguments[0]); //Jhon
+    console.log('--spread--', other); //  ["btech", "university", "30"]
+    console.log('--------------');
+    
+  }
+  greet();  // In JS you can also not pass anything that sets undefined for them
+  greet('Jhon'); // you can skip part of params
+  greet('Jhon', 'Doe');
+  greet('Jhon', 'Doe', 'CS');
+// with spread operator the rest will be taken in it
+greet('Jhon', 'Doe', 'CS', 'btech', 'university', '30');
+// In ES6 you can set default value directly in parameter
+// In old style  you can do inside language = language || 'en';
+// arguments is an array-like its not like a perfect array, it wont have all array properties
+
+// Spread operator gets the arguments and creates like an array
+```
+
+### function overloading
+
+```
+function greet(fname, lname, language){
+  language = language || 'en';
+  if(language === 'en'){
+      console.log('Hello ' + firstname + '' + lastname);
+  }
+  if(language === 'es'){
+      console.log('Hola '+firstname+''+lastname);
+  }
+}
+
+greet('John', 'Doe', 'en');
+greet('John', 'Doe', 'es');
+// to reduce this function overloading we can take help of separate functions
+//------- we can also make separate functions in few cases---
+function greetEnglish(fname, lname) {
+    greet(fname, lname, 'en');
+}
+function  greetSpanish(fname, lname) {
+    greet(fname, lname, 'es');
+}
+
+greetEnglish('John', 'Doe');
+greetSpanish('John', 'Doe');
+```
+
+### Conceptual Aside #8 - Syntax Parsers
+- making assumptions
+- doing certain rules
+- charecter by charecter
+### Dangerous Aside #1 - Automatic semicolon insert
+Syntax parsers in JS does something helpful, It tries to find a semicolon requirement if its missing it inserts for us
+Especially incase of return this help can become dangerous
+```javascript
+function getPerson(){
+    return
+    {
+        firstname: 'Sai'
+    }
+}
+
+console.log(getPerson()); // you will get undefined
+// This happens because of syntax parser did automatic semicolon insertion 
+/*
+return; // <---- observe here
+    {
+        firstname: 'Sai'
+    }
+*/
+// so try not to go next line while continous blocks
+function getPerson(){
+    return { // sameline block start
+        firstname: 'Sai'
+    }; // semicoln after ending
+}
+
+```
+
+### Framework Aside#3 - whitespace
+Invisible charecters that create literal 'space' in your written code
+carriage returns, tabs, spaces
+```
+var 
+//first name of the person
+fname, 
+//lastname of the person
+lname, 
+// language can be
+//en or es
+language;
+var person = {
+    // first name
+    fname: 'John',
+    // lastname
+    lname: 'Doe'
+}
+console.log(person);
+```
+this is perfectly valid - dont get stuck because of this
