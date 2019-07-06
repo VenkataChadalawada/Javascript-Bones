@@ -827,3 +827,177 @@ say if we want global obj
 }(window, 'sai')); 
 console.log(greeting);
 ```
+### Understanding Closures
+```javascript
+function greet(whattosay){
+    return function(name){
+        console.log(whattosay+' '+name);
+    }
+}
+greet('hi')('sai'); // hi sai
+
+
+function greet(whattosay){
+    return function(name){
+        console.log(whattosay+' '+name);
+    }
+}
+var sayhi = greet('hi'); 
+
+sayhi('sai'); // hi sai
+```
+how does sayhi knows about whattosay ?
+
+when execution context is popped off normally JS does garbage Collection clears off the memory space used by it 
+
+when sayhi execution context comes in  it gets name but what about 'whattosay' ?? how will it get it?
+closing in all variables that it suppose to have access to is called closure 
+
+closures are simply a feature of JS engine, it ensures the functions get access to whatever they are supposed to get it
+
+
+### Understanding Closures - 2
+sometimes closures give unexpected results. possible solution is using IIFE in those situations
+```
+function buildFunctions(){
+    var arr = [];
+    for(var i=0;i<3;i++){
+        arr.push(function(){
+            console.log(i); // when this function executes it looks for 'i'
+        }); // arrays are collections of anything
+    }
+    return arr;
+}
+
+var fs = buildFunctions();
+fs[0]();
+fs[1]();
+fs[2]();
+// you may expect 0,1,2
+//but u get 3 3 3 because of closure accessing i which has been changed to 3
+```
+how does execution stack looks like?
+well, first global execution context it has
+- buildFunction
+- fs variable
+when buildFunction executes it has execution context
+- i 3
+- arr [f0,f1,f2]
+whe it hit return arr above two values will be there in execution context and it will be popped off from stack but those i and arr will stay in memory
+now next line fs[0]() executes, its execution context will be created , it doesnt have i - so it goes to its outer scope and checks inmemory which has i as 3 and arr has [f0,f1,f2]
+similarly for fs[1]() and fs[2]() - they all point to same memory spot.
+
+##### With ES6- Let it creates block scope
+```javascript
+function buildFunctions(){
+    var arr = [];
+    for(var i=0;i<3;i++){
+        let j = i;
+        arr.push(function(){
+            console.log(j);
+        })
+    }
+    return arr;
+}
+
+var fs = buildFunctions();
+fs[0]();
+fs[1]();
+fs[2]();
+
+```
+this time you will get 0,1,2 as expected - because it will be segmented so that it will created 3 different memory spots (subsegments)
+
+##### with out let
+what we need is a separate execution context for that function - the only way to get the execution context is with a function, how can we get that onfly - IIFE
+```javascript
+function buildFunctions(){
+    var arr = [];
+    for(var i=0;i<3;i++){
+        let j = i;
+        arr.push(
+         (function(j){
+             return function(){
+                console.log(j);
+             }
+        })(i)
+        );
+    }
+    return arr;
+}
+
+var fs = buildFunctions();
+fs[0]();
+fs[1]();
+fs[2]();
+// 3 j's will be created refering to three diff exe cut contexts
+```   
+### FrameworkAside #5 - using closures creating factory functions
+
+```javascript
+function makeGreeting(language){
+    return function(fname, lname){
+        if(language === 'en'){
+            console.log('hello '+fname+' '+lname);
+        }
+        if(language === 'es'){
+            console.log('hola '+fname+' '+lname);
+        }
+    }
+}
+
+var greetEnglish = makeGreeting('en');
+var greetSpansih = makeGreeting('es');
+
+greetEnglish('John', 'Doe');
+greetSpansih('John', 'Doe');
+```
+
+greetEnglish is a closure function whose language points to greetEnglish
+greetSpansih is a closure function whose language points to greetSpansih
+
+makeGreeting acted like a factory function
+
+
+In the beginning, we will have global execution context which has
+- greetEnglish
+- greetSpanish
+- makeGreeting()
+makeGreeting('en') gets executed and gets context which has
+- language 'en'
+and pops off which leaves language en in memory
+when we see greetEnglish gets a closure of fname, lname of its and and its outer scope points to language 'en w
+similary greetSpanish
+
+### Closures and Callbacks 
+setTimeout, jQuery events everythings uses these
+```javascript
+function sayHiLater(){
+    var greeting = 'Hi';
+    setTimeout(function(){
+        console.log(greeting);
+    }, 3000);
+
+    // it drops an event after time out 
+
+    sayHiLater(); // it still has reference to greeting 'hi'
+}
+```
+callback function :
+a function you give to another function to be 
+run when the other function is finished
+so the function you call , 'callsback' by calling the function you gave it when it finishes.
+
+```javascript
+function tellmewhendone(cb){
+    var a = 1000;
+    var b = 2000;
+    callback();
+}
+tellmewhendone(function(){
+    console.log('im done');
+});
+```
+
+
+
