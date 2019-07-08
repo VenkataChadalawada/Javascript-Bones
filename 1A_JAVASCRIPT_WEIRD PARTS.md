@@ -998,6 +998,174 @@ tellmewhendone(function(){
     console.log('im done');
 });
 ```
+### Call Apply Bind
+Function is a special kind of object, it has
+- name property
+- code property can be invokable with ()
+in addition to it, they can also get access to some special methods
+- call, apply, bind methods
 
+```javascript
+var person = {
+    fname: 'John',
+    lname: 'Doe',
+    getFullName: function(){
+        var fullname  = this.fname+ ' '+this.lname;
+        return fullname;
+    }
+}
+
+var logname = function(lang1, lang2){
+    console.log('logged:' + this.getFullName());
+    console.log('Arguments:'+lang1+' '+lang2);
+    console.log('----------------');
+}
+
+var logpersonName = logname.bind(person);
+// bind creates a new copy of that function
+logpersonName('en');
+
+
+logname.call(person, 'en', 'es');
+//unlike bind call & apply actually executes the function
+
+logname.apply(person, ['en', 'es']);
+// apply takes paramns in arrY
+
+//WE CAN also does this on fly tricking syntaxparser 
+
+(function(lang1, lang2){
+    console.log('logged:' + this.getFullName());
+    console.log('Arguments:'+lang1+' '+lang2);
+    console.log('--------**--------');
+}
+).apply(person, ['es', 'en']);
+
+```
+
+how do we use them in real life instances?
+###### 1) function borrowing
+
+```javascript
+var person = {
+    fname: 'John',
+    lname: 'Doe',
+    getFullName: function(){
+        var fullname  = this.fname+ ' '+this.lname;
+        return fullname;
+    }
+}
+// function borrowing
+var person2 = {
+    fname: 'sai',
+    lname: 'chad',
+}
+console.log(person.getFullName.apply(person2));
+```
+o/p
+```
+sai chad
+```
+##### 2 function currying - bind usecase
+creating a copy of a function but with some preset parameters - very useful in mathematical situations etc..
+```javascript
+// function currying
+function multiply(a,b){
+    return a*b;
+}
+
+var multipleByTwo = multiply.bind(this, 2); // this now permanantly sets first parameter is always 2
+console.log(multipleByTwo(4)); //this will end up as second param
+
+var multipleByTwo2 = multiply.bind(this, 2, 3); // this now permanantly sets both parameters as 2 and 3
+console.log(multipleByTwo2(4)); //even if we pass another param it wont affect
+
+/*
+o/p
+8 
+6
+*/
+```
+
+### FUNCTIONAL PROGRAMMING
+having the capability like first class functions
+function prog eg - lisp, schema or ml
+```javascript
+var arr1 = [1,2,3];
+console.log(arr1);
+// create arr doubles
+var arr2 = [];
+for(var i=0;i<arr1.length;i++){
+    arr2.push(arr1[i]);
+}
+
+
+//  JS way - func prog
+
+function mapforEach(arr, fn){
+    var newArr = [];
+    for(var i=0;i<arr1.length;i++){
+        newArr.push(
+            fn(arr[i])
+        );
+    }
+    return newArr;
+}
+
+var arr1 = [1,2,3];
+console.log(arr1);
+var arr2 = mapforEach(arr1, function(item){
+    return item*2;
+});
+console.log(arr2);
+// say I can do something diff rather than multiply on it
+var arr3 = mapforEach(arr1, function(item){
+    return item > 2;
+});
+console.log(arr3);
+
+var checkPastlimit = function(limiter, item){
+    return item>limiter;
+}
+var arr4 = mapforEach(arr1, checkPastlimit.bind(this, 1));
+console.log(arr4);
+// now we cemented limiter to 1 using bind - own copy with limit as 1
+
+function doIt(fn, limiter){
+    return fn.bind(this, limiter);
+}
+var arr5 = mapforEach(arr1, doIt(checkPastlimit, 1));
+console.log(arr5);
+
+/*
+(3) [1, 2, 3]
+app.js:23 (3) [1, 2, 3]
+app.js:27 (3) [2, 4, 6]
+app.js:32 (3) [false, false, true]
+app.js:38 (3) [false, true, true]
+app.js:52 (3) [false, true, true]
+*/
+```
+
+// Mutation vs Immutation
+sometimes either we mutate overall or dont mutate at all
+
+underscore.js - has good opensource info - go through it
+
+### Object Oriented JS and Prototypal Inheritance
+creation of objects
+#### conceptual aside - classical vs prototypical
+Inheritance:
+One object gets access to the properties and methods of another object.
+
+classical inheritance - there in c#, java
+Verbose
+massive trees - once it becomes so large - lot of keywords friend, protected, private, interface
+prototypal inheritance
+flexible, extensible, easy to understand (not saying its perfect than other )
+
+#### understanding the prototype:
+say we have object in memory obj it has prop(prop1) & method
+obj.prop1
 
 
