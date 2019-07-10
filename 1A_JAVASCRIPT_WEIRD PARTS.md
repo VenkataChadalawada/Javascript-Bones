@@ -1,4 +1,4 @@
-#Javascript - Understanding, Weird parts
+# Javascript - Understanding, Weird parts
 
 ## Conceptual Side1:
 - Syntax Parser
@@ -1166,6 +1166,114 @@ flexible, extensible, easy to understand (not saying its perfect than other )
 
 #### understanding the prototype:
 say we have object in memory obj it has prop(prop1) & method
-obj.prop1
+we can access with `obj.prop1`
+
+JS engine adds some hidden properties & methods,
+all objects have proto{} property
+a property simply a reference to another object thats prototype
+say if proto has prop2 and we call obj.prop2, when we dont have in actual object it goes and checks in proto properties
+it can be nested it can go proto of proto to find that property.
+This is called "Prototype Chain". Its hidden for the user JS engine does that search
+
+Objects can share the proto's too.
+
+```javascript
+var person = {
+    fname: 'Default',
+    lname: 'Default',
+    getFullName: function(){
+        return this.fname+' '+this.lname;
+    }
+}
+
+var john = {
+    fname: 'John',
+    lname: 'Doe',
+}
+
+//Dont do this ever only for understanding proto
+john.__proto__ = person; // john now inherits the person
+console.log(john.getFullName());
+console.log(john.fname); // it prints 'John' but not 'Default'
+
+var jane = {
+    fname: 'Jane',
+}
+
+jane.__proto__ = person;
+console.log(jane.getFullName());
+console.log(jane.fname);
+/*
+
+John Doe
+app.js:17 John
+app.js:24 Jane Default
+app.js:25 Jane
+
+*/
+```
+
+### Everything is an Object(or a primitive)
+
+```javascript
+var a = {};
+var b = function(){};
+var c = [];
+
+a.__proto__
+b.__proto__
+c.__proto__
+
+// they all have __proto__
+```
+
+### Reflection and Extend
+##### Reflection
+An object can look at itself listing and changing its properties and methods
+
+```javascript
+var person = {
+    fname: 'Default',
+    lname: 'Default',
+    getFullName: function(){
+        return this.fname+' '+this.lname;
+    }
+}
+
+var john = {
+    fname: 'John',
+    lname: 'Doe',
+}
+john.__proto__ = person;
+
+// Reflection
+for(var prop in john) {
+    if(john.hasOwnProperty(prop)){
+        console.log('only---',prop + ': '+ john[prop]);
+    }
+    console.log('all----',prop + ': '+ john[prop]);
+}
+
+var jane = {
+    address: '111 Main St.',
+    getFormalname: function(){
+        return this.lname + ','+ this.fname;
+    }
+}
+
+var jim = {
+    getFirstName: function(){
+        return fname;
+    }
+}
+
+// may be we dont want them in the prototype chain
+
+// underscore extend - assuming we have attached underscore.js library as well
+
+_.extend(john, jane, jim);
+
+console.log(john);
+```
 
 
