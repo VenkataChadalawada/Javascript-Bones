@@ -1276,4 +1276,282 @@ _.extend(john, jane, jim);
 console.log(john);
 ```
 
+### Function constructors & keyword new
+
+Function constructor: 
+when a normal function that is used to construct objects.Function
+the 'This' variable points a new empty object, and that object is returned from the function automatically
+
+  
+```javascript
+function Person(){
+    console.log(this);
+    this.fname = 'John';
+    this.lname = 'Doe';
+    console.log('this func is invoked');
+}
+  
+var john = new Person();
+console.log(john);
+
+// here we created a 
+// new is an operator -> It invokes the function 
+// 
+
+var jane = new Person();
+console.log(jane);
+
+function Person2(fname, lname){
+    console.log(this);
+    this.fname = fname;
+    this.lname = lname;
+    console.log('this func is invoked');
+}
+
+var tim = new Person2('Tim', 'Vin');
+console.log(tim);
+```
+
+### Function constructors and Prototype
+
+when we use function constructor , Proto is already set for us
+``` john.__proto__ ```
+every function in JS has prototype
+as soon as we use new operator on a function then it will be used 
+prototype property of the function is where the prototype chain points to 
+eg:
+John points to prototype property of Person
+```var john = new Person();```
+
+when we call new keyword it sets the empty object of the function you applied on to new
+
+we can also add functions later too
+
+Q) Why prototypes?
+remember functions are objects in JS, they take up memory space, if you have 1000 such objects they take such many memory spaces, instead if we keep it in prototype it just takes 1 space.
+```javascript
+function Person(){
+    console.log(this);
+    this.fname = 'John';
+    this.lname = 'Doe';
+    console.log('this func is invoked');
+}
+var john = new Person();
+console.log(john);
+
+// here we created a 
+// new is an operator -> It invokes the function 
+var jane = new Person();
+console.log(jane);
+
+function Person2(fname, lname){
+    console.log(this);
+    this.fname = fname;
+    this.lname = lname;
+    console.log('this func is invoked');
+}
+var tim = new Person2('Tim', 'Vin');
+console.log(tim);
+
+
+console.log(john.__proto__);
+Person.prototype.getFullName = function(){
+    return this.fname+' '+ this.lname;
+}
+console.log("=====", john.getFullName());
+
+/* O/P
+Person {}
+app.js:5 this func is invoked
+app.js:8 Person {fname: "John", lname: "Doe"}
+app.js:2 Person {}
+app.js:5 this func is invoked
+app.js:13 Person {fname: "John", lname: "Doe"}
+app.js:16 Person2 {}
+app.js:19 this func is invoked
+app.js:22 Person2 {fname: "Tim", lname: "Vin"}
+app.js:25 {constructor: ƒ}
+app.js:29 ===== John Doe
+*/
+```
+
+### Dangerous Aside:
+if we forgot to ass new keyword. it returns undefined as a regular function and  everything will fail
+
+### Conceptual Aside - Built in Function constructors
+var a = new Number("3")
+a
+Number.prototype => you will see bunch of things
+```javascript
+var a = new String("John");
+String.prototype.indexOf('o')
+String.prototype.indexOf("Jo");
+a.indexOf("o");
+````
+`"John".length`   same as `new String("John")`
+
+```javascript
+String.prototype.isLengthGreaterThan = function(limit){
+  return this.length > limit;
+}
+
+console.log("John".isLengthGreaterThan(3));
+   
+// Now all Strings get that method inside them
+
+Number.prototype.isPositive = function(){
+  return this>0;
+}
+3.isPositive() // Error -> because by default it wont convert a number into object automatically, It did for string 
+var a = new Number(3); // It can become this way
+a.isPositive() // true
+```
+### Dangerous Aside - Built in Function constructors
+
+```
+var a = 3;
+var b = new Number(3);
+console.log(a == b) // true
+console.log(a === b) // false -> because once we do new Number , the number gets converted into an object of Number prototype
+
+// if we are dealing with Dates
+//moment.js -> helps out dealing with Dates instead of built in JS Date Constructor
+
+var c = Number("3")
+console.log(c === a);
+
+/*
+true
+app.js:4 false
+app.js:10 true
+*/
+
+
+```
+### Dangerous Aside# Arrays for..in
+```
+// Arrays are objects
+Array.prototype.myCustomFeature = 'cool!';
+
+var arr = ['John', 'Jane', 'Jim'];
+
+for(var prop in arr){
+    console.log(prop+':'+arr[prop]);
+}
+/*
+0:John
+1:Jane
+2:Jim
+*/
+
+// Now after adding mycustomfeature in beginning
+/*
+0:John
+1:Jane
+2:Jim
+myCustomFeature:cool!
+*/
+
+// So in case of array use the standard for loop, than for..in loop -> because arrays are objects and you can iterate down into their prototype
+```
+### Object.create and Pure Prototypal Inheritance
+
+```javascript
+// Polyfill:
+// code that adds a feature whcih the engine may lack because of older and newer JS engines
+// few older browsers might have missed Object.create
+// polyfill for object.create
+if(!Object.create){
+    Object.create = function(o){
+        if(arguments.length > 1){
+            throw new Error('Object.create implementation'+'only accepts the first parameter');
+        }
+        function F(){}
+        F.prototype = o;
+        return new F();
+    }
+}
+
+
+
+var person = {
+    fname: 'Default',
+    lname: 'Default',
+    greet: function(){
+        return 'Hi' + this.fname; // if we dont use this , it looks for its execution context , if not there it goes out and look for as objects dont have the execution context it beocmes window
+    }
+}
+//created object using Object literal notation above
+
+var john = Object.create(person); // creates empty object with __proto__ pointing to the prototype of person
+console.log(john.fname);
+john.fname = 'John'; // we can have its own
+john.lname = 'Doe';
+console.log(john);
+
+// This is Pure prototypal inheritance
+```
+
+### ES6 and classes
+```javascript
+class Person {
+    constructor(fname, lname){
+        this.fname = fname;
+        this.lname = lname;
+    }
+    greet(){
+        return 'Hi'+fname;
+    }
+}
+
+var john = new Person('John', 'Doe');
+
+// how do we set the prototype in ES6 style, extends sets the Prototype
+class InformalPerson extends Person{
+    constructor(fname, lname){
+        super(fname, lname); // calls the constructor of the parent object
+    }
+    greet(){
+        return 'Yo'+fname;
+    }
+}
+
+// Syntactic Sugar:
+/*
+A different way to type something that doesn't change how it works under the hood
+*/
+
+```
+
+### Odds & Ends
+#### typeof, instanceof and figiuring out what something is?
+
+```javascript
+var a = 3;
+console.log(typeof a); // number
+
+var b = "Hello";
+console.log(typeof b); // string
+
+var c = {};
+console.log(typeof c); // object
+
+var d = {};
+console.log(typeof d); // object // - weird?
+console.log(Object.prototype.toString.call(d)); // [object Array] //- better
+
+function Person(name){
+    this.name = name;
+}
+var e = new Person('Jane');
+console.log(typeof e); // object
+console.log(e instanceof Person); // if any of that __proto__ chain is Person
+
+console.log(typeof undefined); // makes sense
+console.log(typeof null); // object -> its a bug since , like , forever ...
+
+var z = function(){};
+
+console.log(typeof z); // function
+```
 
