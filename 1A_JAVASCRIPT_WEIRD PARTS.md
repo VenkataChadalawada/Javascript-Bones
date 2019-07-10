@@ -547,6 +547,10 @@ Each "execution context" will get:
 - Outer Environment
 - 'this' variable
 
+"this" will be pointing at different thing depending on how function is invoked
+when you create a function this still points to global this object
+
+
 ```javascript
 console.log(this); // window - in global execution context of browser
 
@@ -557,29 +561,41 @@ function a() {
 a();
 
 var b = function() {
-    console.log(this);
+    console.log(this); // still window
 }
 
 a(); //window
-console.log(newvariable);
+console.log(newvariable); // 'hello'
 b(); //window
 // They all pointing at the same window at same address
+
 console.log('-------');
 
-// What about methods inside an object?
+// What about methods inside an object? - can we still want this to be window? No when JS sees the function is inside an object it sets 'this' to the parent object.
 // property - in  object if its primitve its called property
 // method - in object if its a function its called method
+
+var c = {
+  name: 'The c object',
+  log: function(){
+     console.log(this); // this is 'c' object here 
+     console.log(this.name); // The c object'
+   }
+}
+
+// However say you have another same name variable inside that very function inside c object then in this case you may want that to be that functions own variable rather than C object's variable?
+// Also say if a method has inner function inside , in that fiunction this becomes global value of this (window)
 
 var c  = {
     name: 'The c object',
     log: function(){
         this.name = 'updated c object';
-        console.log(this);
+        console.log(this); // this here points to 'c' object
         var setname = function(newName){
-            this.name = newName; // here this points to global object - how to solve it - check below
+            this.name = newName; // here this points to global object so in this case it creates a glbal name to window and sets this newName - its a bug in JS - how to solve it - check below
         }
-        setname('Update again! the c object');
-        console.log(this);
+        setname('Update again! the c object'); // updates global this (window)
+        console.log(this); // still this contains " updated c " but not "Update again! the c object"
     }
 }
 c.log(); // inside an object this points to the object it is inside , it can be useful to acces other propertie and methods of the object
