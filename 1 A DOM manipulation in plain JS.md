@@ -1,4 +1,30 @@
 # DOM Manipulation
+```javascript
+var arr = ['apple', 'banana', 'orange'];
+
+var ul = document.createElement('ul');
+for(var i=0;i<arr.length;i++) {
+	var li = document.createElement('li');
+	var txt = document.createTextNode(arr[i]);
+	li.appendChild(txt);
+	ul.appendChild(li);
+}
+
+var div = document.getElementById('hello');
+div.appendChild(ul);
+
+// -- another easy variation
+
+var UL = document.createElement("ul");
+var text = "";
+for(var i=0;i<arr.length;i++) {
+	var LI =  document.createElement("li");
+	LI.innerHTML = '<p>'+arr[i]+'</p>';
+	UL.append(LI);
+}
+var hi = document.getElementById('hi');
+hi.append(UL);
+```
 ### DOM selectors using JS
 ```javascript
 var element = document.getElementById(id)
