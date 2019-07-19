@@ -1,4 +1,11 @@
 // Objects & Arrays
+
+// Objects
+/*
+  they are not ordered
+  but they can give constant time of access
+*/
+
 let obj = {
   name: 'venkat',
   age: 29,
