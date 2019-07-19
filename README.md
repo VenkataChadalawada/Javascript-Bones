@@ -1,11 +1,17 @@
 # Javascript-Bones
 
 A repo to understand few complex topics in js
+Structure - Behaviour - Presentation
+HTML - JS - CSS
 
 ## Some DOM Basics
 
 ### 1 Select & Manipulate:
-Select
+#### Select
+getElementById
+getElementsByClassName
+getElementsByTagName
+querySelector
 ```
 document.querySelector('hi');
 ```
@@ -37,7 +43,35 @@ var Animator = setInterval(function(){
 
 ```
 
-Eg2: Move a box from left to right by creating an animating effect\
+
+#### Manipulate
+- a) changing an element style
+- b) adding/removing classes
+- c) changing the content of a tag
+- d) changing attributes(src, href, etc)
+
+##### a) changing an element style
+var tag = document.getElementById('highlight');
+tag.style.color = 'blue';
+tag.style.border = '10px solid red';
+tag.style.fontSize = '70px';
+tag.style.background = 'yellow';
+tag.style.marginTop = '200px';
+
+say if we have a class
+```
+.some-class{
+ color: blue;
+ fontSize: 76px;
+}
+tag.classList.add('some-class');
+tag.classList.remove('some-class');
+tag.classList.toggle('some-class');
+```
+ 
+
+Eg2: Move a box from left to right by creating an animating effect
+
 ```javascript
 var body = document.querySelector('body');
 var isBlue = false;
@@ -63,3 +97,4 @@ var animate = setInterval(function(){
 time+=1;
 }, 100);
 ```
+
