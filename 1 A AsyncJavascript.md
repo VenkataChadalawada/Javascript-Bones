@@ -442,6 +442,7 @@ Output
 /*
 
 inside
+
 outside
 
 */
@@ -494,3 +495,95 @@ promise2
 setTimeout
 
 */
+
+Note: Some browsers log script start, script end, setTimeout, promise1, promise2. They're running promise callbacks after setTimeout. It's likely that they're calling promise callbacks as part of a new task rather than as a microtask.
+
+#### Another example to look over multiple browsers along with event bubbling effect
+```html
+<div class="outer">
+  <div class="inner"></div>
+</div>
+```
+
+```javascript
+// Let's get hold of those elements
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
+
+// Let's listen for attribute changes on the
+// outer element
+new MutationObserver(function() {
+  console.log('mutate');
+}).observe(outer, {
+  attributes: true
+});
+
+// Here's a click listener…
+function onClick() {
+  console.log('click');
+
+  setTimeout(function() {
+    console.log('timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('promise');
+  });
+
+  outer.setAttribute('data-random', Math.random());
+}
+
+// …which we'll attach to both elements
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick);
+```
+Output
+```
+click
+promise
+mutate
+click
+promise
+mutate
+timeout
+timeout
+
+#### Chrome : 
+click
+promise
+mutate
+click
+promise
+mutate
+timeout
+timeout
+
+#### Firefox
+click
+mutate
+click
+mutate
+timeout
+promise
+promise
+timeout
+
+#### safari
+click
+mutate
+click
+mutate
+promise
+promise
+timeout
+timeout
+
+#### IE
+click
+click
+mutate
+timeout
+promise
+timeout
+promise
+
