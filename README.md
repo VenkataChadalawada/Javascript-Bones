@@ -98,3 +98,19 @@ time+=1;
 }, 100);
 ```
 
+## CSS
+### Flex Box
+
+#### Container Properties
+- flex-direction
+- justify-content
+- flex-wrap
+- align-items
+- align-content
+
+#### Flex Item Properties
+- order
+- flex
+- flex-grow
+- flex-shrink
+- align-self
