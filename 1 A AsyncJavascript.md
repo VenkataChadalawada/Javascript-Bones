@@ -480,10 +480,15 @@ console.log('script end');
 ```
 OUTPUT
 /*
+
 script start
+
 script end
+
 promise1
+
 promise2
+
 setTimeout
 
 */
