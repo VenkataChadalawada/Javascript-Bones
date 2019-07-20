@@ -440,8 +440,10 @@ p1.then(function(result){ // *** then called here after setTimeout above
 ```
 Output
 /*
+
 inside
 outside
+
 */
 
 But if you do this
