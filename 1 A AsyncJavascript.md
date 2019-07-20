@@ -418,3 +418,72 @@ Counter: 1
 Counter: 2
 Counter: 3
 ```
+
+
+### Key Concepts using Promise
+##### Promises executes as soon as initializes it
+``` javascript
+var p1 = new Promise(function(res, rej){
+	setTimeout(function(){
+		res('inside');
+	}, 3000);
+});
+
+setTimeout(function(){
+	console.log('outside');
+}, 3000);
+
+
+p1.then(function(result){ // *** then called here after setTimeout above
+  console.log(result);
+});
+```
+Output
+/*
+inside
+outside
+*/
+
+But if you do this
+``` javascript
+setTimeout(function(){
+	console.log('outside');
+}, 3000);
+
+var p1 = new Promise(function(res, rej){
+	setTimeout(function(){
+		res('inside');
+	}, 3000);
+});
+
+p1.then(function(result){
+  console.log(result);
+});
+```
+
+##### Promises has Microtask Queue gets higher precedence than regular task Queue
+
+```javascript
+console.log('script start');
+
+setTimeout(function() { // called at beginning than promise
+  console.log('setTimeout');
+}, 0);
+
+Promise.resolve().then(function() {
+  console.log('promise1');
+}).then(function() {
+  console.log('promise2');
+});
+
+console.log('script end');
+```
+OUTPUT
+/*
+script start
+script end
+promise1
+promise2
+setTimeout
+
+*/
