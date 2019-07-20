@@ -587,3 +587,51 @@ promise
 timeout
 promise
 ```
+Dispatching the 'click' event is a task. Mutation observer and promise callbacks are queued as microtasks. The setTimeout callback is queued as a task. So here's how it goes:
+
+same example with below line in the end instead of manual click dispatch a click via script
+```javascript 
+inner.click(); 
+```
+
+Output
+```
+#Chrome
+click
+click
+promise
+mutate
+promise
+timeout
+timeout
+
+#Firefox
+click
+click
+mutate
+timeout
+promise
+promise
+timeout
+
+#Safari
+click
+click
+mutate
+promise
+promise
+timeout
+timeout
+
+#Edge
+click
+click
+mutate
+timeout
+promise
+timeout
+promise
+```
+##### Reference:-
+Great Read - https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/ you might be overwhelmed  but sad reality with the browsers and we need to cope with it. :(
+
