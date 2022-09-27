@@ -627,16 +627,205 @@ const deepCompare = (source, target) => {
         if(source.length !==target.length){
             return false;
         }
-        return source.every((el, index) => el === target[index]);
+        return source.every((el, index) => deepCompare(el, target[index]));
     }
     if(typeof source === 'object'){
         if(Object.keys(source).length !== Object.keys(target).length) {
             return false;
         }
-        return Object.keys(source).every((key) => source[key] === target[key]);
+        return Object.keys(source).every((key) => deepCompare(source[key], target[key]));
     }
     return source === target;
 }
 
 
 // 3 memoization function
+// design a memoization function which adds 10 to provided value and take it from cache if it was already calculated
+
+const memoized = () => {
+    let cache = {}; // closured 
+    return (value) => {
+        if(value in cache){
+            console.log('fetching from cache');
+            return cache[value];
+        } else {
+            console.log('calculating results');
+            const res = value + 10;
+            cache[value]=result;
+            return result;
+    }
+}
+    
+const newAdd = memoizedAdd();
+console.log(newAdd(9));
+console.log(newAdd(9));
+    
+    
+// Design a func returns fibonacci sequence value
+    const fibonacci = n => {
+        if(n<2){
+            return 1;
+        } else {
+            return fibonacci(n-2)+fibonacci(n-1);
+        }
+    }
+        
+// Palindrome
+    //foo - false
+    //fof - true
+    
+    const isPalindrome = str => {
+        return str === str.split('').reverse().join('');
+    }
+    
+// Anagrams
+    // listen & silent
+    // fairy tales & rail safety
+    // the eyes & they see
+    
+    const isAnagram = (str1, str2) => {
+        if(str1.length!==str2.length){
+            return false;
+        }
+        const lowerStr1 = str1.toLowercase();
+        const lowerStr2 = str2.toLowerCase();
+        if(lowerStr2 === lowerStr2){
+            return false;
+        }
+        const sortedStr1 = lowerStr1.split('').sort().join('');
+        const sortedStr2 = lowerStr2.split('').sort().join('');
+        return sortedStr1 === sortedStr2;
+    }
+    
+isAnagram('listen', 'silent'); // true
+    
+    // write a function which counts vowels in a string
+    // sol1
+     const findVowels = str => {
+        const vowels = ['a','e', 'i', 'o', 'u'];
+        return str.toLowerCase().split('').reduce((acc, char) => {
+            return vowels.includes(char)? acc+1:acc;
+        }, 0);
+    }
+    // sol2
+    const findVowels = str => {
+        const vowels = ['a','e', 'i', 'o', 'u'];
+        let count = 0;
+        for (let c of str.toLowerCase()){
+            if(vowels.includes(char)){
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    // convert to title case
+    const titleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        
+//         const arr = str.toLowerCase().split(' ');
+//         for(var i=0; i<arr.length;i++){
+//             arr[i] = arr[i].charAt(0).toUpperCase()+arr[i].slice(1);
+//         }
+//         return arr.join(' ');
+    };
+    
+    // convert to 24 hours format
+    
+    convertTo24hrsFormat = timeText => {
+        const timeTextLower = timeText.toLowercase();
+        let [hours, mins] = timeTextLower.split(':');
+        if(timeTextLower.endsWith('am')){
+            hours = hours === '12' ? '0' : hours; // 12:10AM = 00:10
+        } else if(timeTextLower.endsWith('pm')) {
+            hours = hours === '12' ? hours : String(+hours+12) // 01:59PM = 13:59
+        }
+        console.log('convert', timeText, hours);
+        // hours.padStart(2, 0); // 2 digits , pad with 0
+        return hours.padStart(2, 0) + ":" + mins.slice(0,-2).padStart(2, 0);
+    };
+
+    
+    // Map data to the frontend format. the main element is location key and we need to map all data to it.
+    
+    const loc = [
+        {
+            location_key : [32, 22, 11],
+            autoassign: 1,
+        },
+        {
+            location_key : [41, 42],
+            autoassign: 1,
+        },
+     ];
+
+    const bulkConfig = [
+        { 
+            dataValues : {
+                config_key: 100,
+            },
+        },
+        {
+            dataValues : {
+                config_key: 200,
+            },
+        }
+    
+    const result = loc.map(locEl, index) => {
+        return locEl.location_key.map((locationKey) => {
+            return {
+                location_key: locationKey,
+                config_key: bulkConfig[index].dataValues.config_key,
+                autoassign: locEl.autoassign,
+            };
+        }). reduce((arr, acc) => arr.concat(acc), []);
+    });
+    
+    
+    const initialUrl = '/posts/:postId/comments/:commentId';
+    const resultUrl = replaceParamsinUrl(initialUrl, [
+        { from: 'postId', to: '1'},
+        { from : 'commentId', to: '3'},
+    ]);
+    
+    // TODO:
+    // 1. Go through replacements
+    // 2.replace parts of each replacements
+    // 3. return a string
+    
+    const replaceParamsInUrl = (url, replacement) => {
+        return replacements.reduce((acc, replacement) => {
+            return acc.replace(':'+replacement.from, replacement.to);
+        }, url);
+    }
+    
+    // ---------------------
+    
+    // flat list to nested list
+    const flatList = [
+        {
+            id: 1,
+            name: 'lvl 
+        },
+   ];
+    const nestedList = flatList
+    .filter(item.parentId === null); // we will get parents
+    .map(addChildren);
+    
+    const addChildren = item => {
+        const children = flatList.filter
+        (childItem => childItem.parentId === item.id);
+        let nestedChildren = [];
+        if(children.length >0){
+            nestedChildren = children.map((child) => addChildren(child));
+        }
+        return Object.assign ({}, item, {children: nestedChildren});
+    }
+    
+            
+            
+    
